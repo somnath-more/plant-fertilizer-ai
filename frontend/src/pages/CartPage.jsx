@@ -2,7 +2,7 @@ import { CheckCircle, Search, Shield, ShoppingCart } from "lucide-react";
 import { Button } from "../components/atoms/Button";
 import { CartItem } from "../components/molecules/CardItem";
 
-export const CartPage = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
+ const CartPage = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 500 ? 0 : 50;
   const total = subtotal + shipping;
@@ -92,3 +92,4 @@ export const CartPage = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
     </div>
   );
 };
+export default CartPage;

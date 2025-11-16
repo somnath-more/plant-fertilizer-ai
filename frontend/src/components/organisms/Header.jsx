@@ -3,7 +3,7 @@ import { ORGANICFERT, PAGES } from '../../utils';
 import { Button } from '../atoms/Button';
 
 
-export const Header = ({ user, onNavigate, cartCount, currentPage }) => (
+ const Header = ({ user, onNavigate, cartCount, currentPage }) => (
   <header className="bg-white/80 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-gray-200">
     <div className="max-w-7xl mx-auto px-6 py-4">
       <div className="flex items-center justify-between">
@@ -71,3 +71,4 @@ export const Header = ({ user, onNavigate, cartCount, currentPage }) => (
     </div>
   </header>
 );
+export default Header;

@@ -4,7 +4,7 @@ import { Button } from "../components/atoms/Button";
 import { Input } from "../components/atoms/Input";
 import  GoogleIcon from '../assets/images/googleIcon.jpg';
 
-export const LoginPage = ({ onLogin }) => {
+ const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -83,3 +83,4 @@ export const LoginPage = ({ onLogin }) => {
     </div>
   );
 };
+export default LoginPage;

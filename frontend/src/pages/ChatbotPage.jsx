@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ChatMessage } from "../components/molecules/ChatMessage";
 import { Button } from "../components/atoms/Button";
 
-export const ChatbotPage = () => {
+ const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     { id: 1, text: 'Hello! 👋 I\'m your organic fertilizer expert. How can I help you today?', isUser: false }
   ]);
@@ -88,3 +88,4 @@ export const ChatbotPage = () => {
     </div>
   );
 };
+export default ChatbotPage;

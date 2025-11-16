@@ -4,7 +4,11 @@ import { Button } from '../components/atoms/Button';
 import { FeatureCard } from '../components/molecules/FeatureCard';
 import { Input } from '../components/atoms/Input';
 import { ProductCard } from '../components/molecules/ProductCard';
-export const HomePage = ({ products, onAddToCart, onNavigate }) => {
+import { useProductStore } from '../store/useProductStore';
+import { useCartStore } from '../store/useCartStore';
+ const HomePage = () => {
+   const products = useProductStore((state) => state.products);
+  const addToCart = useCartStore((state) => state.addToCart);
   const [searchTerm, setSearchTerm] = useState('');
   
   const filteredProducts = products.filter(p =>
@@ -26,11 +30,11 @@ export const HomePage = ({ products, onAddToCart, onNavigate }) => {
               Premium organic fertilizers powered by AI recommendations for healthier plants and sustainable growth
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Button variant="glass" size="lg" onClick={() => onNavigate("ai-diagnosis")}>
+              <Button variant="glass" size="lg" >
                 <Sparkles size={20} />
                 Try AI Diagnosis
               </Button>
-              <Button variant="outline" size="lg" onClick={() => onNavigate("shop")}>
+              <Button variant="outline" size="lg" >
                 Shop Now
               </Button>
             </div>
@@ -77,10 +81,11 @@ export const HomePage = ({ products, onAddToCart, onNavigate }) => {
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+            <ProductCard key={product.id} product={product} addToCart={addToCart} />
           ))}
         </div>
       </div>
     </div>
   );
 };
+ export default HomePage;

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "../components/atoms/Button";
 import { Badge } from "../components/atoms/Badge";
 
-export const AIDiagnosisPage = () => {
+ const AIDiagnosisPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [diagnosis, setDiagnosis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -140,3 +140,4 @@ export const AIDiagnosisPage = () => {
     </div>
   );
 };
+export default AIDiagnosisPage;

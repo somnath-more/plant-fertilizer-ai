@@ -3,7 +3,7 @@ import { Button } from "../components/atoms/Button";
 import { useState } from "react";
 import { ARTICLES } from "../utils";
 
-export const BlogPage = () => {
+ const BlogPage = () => {
   const [articles] = useState(ARTICLES);
 
   return (
@@ -65,3 +65,4 @@ export const BlogPage = () => {
     </div>
   );
 };
+export default BlogPage;
