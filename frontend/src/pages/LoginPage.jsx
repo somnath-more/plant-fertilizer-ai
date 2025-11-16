@@ -1,7 +1,8 @@
+import { Github, Icon, Leaf, LogIn, Shield } from 'lucide-react';
 import { useState } from "react";
-import React from 'react';
-import { Camera, ShoppingCart, MessageSquare, User, LogIn, LogOut, Package, BookOpen, Search, Upload, Send, Plus, Minus, X, ChevronRight, Leaf, Sparkles, CheckCircle, AlertCircle, TrendingUp, Award, Shield, Zap } from 'lucide-react';
-
+import { Button } from "../components/atoms/Button";
+import { Input } from "../components/atoms/Input";
+import  GoogleIcon from '../assets/images/googleIcon.jpg';
 
 export const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -52,6 +53,17 @@ export const LoginPage = ({ onLogin }) => {
               <LogIn size={20} />
               Sign In
             </Button>
+            {/* Google and Github Auth */}
+            <div className="flex items-center flex-col gap-4 mt-4">
+              <Button variant="outline" size="lg" className="flex-1 flex items-center justify-center gap-2">
+               {/* <Icon className="text-gray-600" src={GoogleIcon} /> */}
+                Sign in with Google
+              </Button>
+              <Button variant="outline" size="lg" className="flex-1 flex items-center justify-center gap-2">
+                <Github size={20} className="text-gray-600" />
+                Sign in with GitHub
+              </Button>
+            </div>
           </form>
           
           <div className="mt-8 text-center">

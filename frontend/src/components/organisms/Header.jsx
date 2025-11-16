@@ -1,5 +1,5 @@
-import React from 'react';
-import { Camera, ShoppingCart, MessageSquare, User, LogIn, LogOut, Package, BookOpen, Search, Upload, Send, Plus, Minus, X, ChevronRight, Leaf, Sparkles, CheckCircle, AlertCircle, TrendingUp, Award, Shield, Zap } from 'lucide-react';
+import { Leaf, LogIn, LogOut, ShoppingCart } from 'lucide-react';
+import { ORGANICFERT, PAGES } from '../../utils';
 import { Button } from '../atoms/Button';
 
 
@@ -12,13 +12,13 @@ export const Header = ({ user, onNavigate, cartCount, currentPage }) => (
             <Leaf size={28} className="text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent font-poppins">OrganicFert</h1>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent font-poppins">{ORGANICFERT}</h1>
             <p className="text-xs text-gray-500 font-inter">Grow Naturally</p>
           </div>
         </div>
         
         <nav className="hidden md:flex items-center gap-8">
-          {['home', 'ai-diagnosis', 'chatbot', 'blog'].map((page) => (
+          {PAGES.map((page) => (
             <button
               key={page}
               onClick={() => onNavigate(page)}

@@ -4,7 +4,7 @@ import { Button } from '../components/atoms/Button';
 import { FeatureCard } from '../components/molecules/FeatureCard';
 import { Input } from '../components/atoms/Input';
 import { ProductCard } from '../components/molecules/ProductCard';
-export const HomePage = ({ products, onAddToCart }) => {
+export const HomePage = ({ products, onAddToCart, onNavigate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const filteredProducts = products.filter(p =>
@@ -26,11 +26,11 @@ export const HomePage = ({ products, onAddToCart }) => {
               Premium organic fertilizers powered by AI recommendations for healthier plants and sustainable growth
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Button variant="glass" size="lg">
+              <Button variant="glass" size="lg" onClick={() => onNavigate("ai-diagnosis")}>
                 <Sparkles size={20} />
                 Try AI Diagnosis
               </Button>
-              <Button variant="outline" size="lg" className="">
+              <Button variant="outline" size="lg" onClick={() => onNavigate("shop")}>
                 Shop Now
               </Button>
             </div>
