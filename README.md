@@ -1,4 +1,4 @@
-# 🌱 Plant Fertilizer Assistant — React + Vite + SpringBoot
+# 🌱 Plant Fertilizer Assistant — React(Vite) + SpringBoot
 
 A modern AI-powered plant-care application that identifies plants from uploaded images, analyzes growth stages, recommends optimal organic fertilizers, and enhances user support through an integrated chatbot.
 
