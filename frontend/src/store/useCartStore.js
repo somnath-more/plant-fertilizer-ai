@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
-export const useCartStore = create((set) => ({
+export const useCartStore = create((set, get) => ({
   cart: [],
+
   addToCart: (product) =>
+  {
     set((state) => {
       const exists = state.cart.find((p) => p.id === product.id);
       if (exists) {
@@ -13,7 +15,7 @@ export const useCartStore = create((set) => ({
         };
       }
       return { cart: [...state.cart, { ...product, quantity: 1 }] };
-    }),
+    })},
 
   updateQuantity: (id, quantity) =>
     set((state) => ({
@@ -26,4 +28,14 @@ export const useCartStore = create((set) => ({
     set((state) => ({
       cart: state.cart.filter((p) => p.id !== id),
     })),
+
+  clearCart: () => set({ cart: [] }),
+
+  getCartTotal: () => {
+    const cart = get().cart;   // <-- Correct way to access state inside store
+    return cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  },
 }));

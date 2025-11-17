@@ -8,7 +8,9 @@ export const ProductCard = ({ product, onAddToCart }) => (
   <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 transform hover:-translate-y-2">
     <div className="relative h-52 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-emerald-400/10 group-hover:scale-110 transition-transform duration-700"></div>
-      <Package size={72} className="text-green-500 relative z-10 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500" />
+      {/* <Package size={72} className="text-green-500 relative z-10 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500" />*/}
+      {/* <Camera size={72} className="text-green-500 relative z-10 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500" /> product.image */}
+      <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
       {product.stock > 0 && product.stock < 10 && (
         <div className="absolute top-4 right-4">
           <Badge variant="warning">Only {product.stock} left</Badge>

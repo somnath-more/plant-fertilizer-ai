@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import BlogPage from "./pages/BlogPage";
 import HomePage from "./pages/HomePage";
 import ShopPage from "./pages/ShopPage";
@@ -12,6 +12,11 @@ import ChatbotPage from "./pages/ChatbotPage";
 
 
 export default function App() {
+  const navigate=useNavigate();
+  const handleLogin=(data)=>{
+    console.log(data);
+    navigate("/home");
+  }
   return (
 <Routes>
 
@@ -29,7 +34,7 @@ export default function App() {
   </Route>
 
   {/* Routes WITHOUT layout */}
-  <Route path="/login" element={<LoginPage />} />
+  <Route path="/login" element={<LoginPage onLogin={(data) => {handleLogin(data)}} />} />
   <Route path="*" element={<div>404 Not Found</div>} />
 
 </Routes>

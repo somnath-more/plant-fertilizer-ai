@@ -1,6 +1,8 @@
 import { Leaf, LogIn, LogOut, ShoppingCart } from 'lucide-react';
 import { ORGANICFERT, PAGES } from '../../utils';
 import { Button } from '../atoms/Button';
+import FertilizerLogo from '../../assets/images/PlantFertilizerAI.svg';
+import Icon from '../atoms/Icon';
 
 
  const Header = ({ user, onNavigate, cartCount, currentPage }) => (
@@ -9,7 +11,8 @@ import { Button } from '../atoms/Button';
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate('home')}>
           <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-            <Leaf size={28} className="text-white" />
+            {/* <Leaf size={28} className="text-white" /> */}
+            <Icon src={FertilizerLogo} alt="Logo" className="w-8 h-8" />
           </div>
           <div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent font-poppins">{ORGANICFERT}</h1>

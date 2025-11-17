@@ -1,8 +1,15 @@
 import { CheckCircle, Search, Shield, ShoppingCart } from "lucide-react";
 import { Button } from "../components/atoms/Button";
 import { CartItem } from "../components/molecules/CardItem";
+import { useCartStore } from "../store/useCartStore";
 
- const CartPage = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
+ const CartPage = ({ onCheckout }) => {
+   const cart = useCartStore((state) => state.cart);
+  //  onRemove
+   const onRemove = useCartStore((state) => state.removeFromCart);
+   const onUpdateQuantity = useCartStore((state) => state.updateQuantity);
+   console.log("cart",cart);
+   
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 500 ? 0 : 50;
   const total = subtotal + shipping;
@@ -18,10 +25,10 @@ import { CartItem } from "../components/molecules/CardItem";
               <ShoppingCart size={64} className="text-gray-400" />
             </div>
             <p className="text-2xl text-gray-600 font-inter mb-6">Your cart is empty</p>
-            <Button variant="primary" size="lg">
+            {/* <Button variant="primary" size="lg">
               <Search size={20} />
-              Start Shopping
-            </Button>
+               Start Shopping
+            </Button> */}
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
