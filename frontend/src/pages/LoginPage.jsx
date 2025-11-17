@@ -1,31 +1,44 @@
-import { Github, Icon, Leaf, LogIn, Shield } from 'lucide-react';
+import { Github, Leaf, LogIn, SearchIcon, Shield } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../components/atoms/Button";
-import { Input } from "../components/atoms/Input";
-import  GoogleIcon from '../assets/images/googleIcon.jpg';
+import GoogleIcon from "../assets/images/GoogleIcon.svg";
+import GithubIcon from "../assets/images/githubIcon.svg";
+import FacebookIcon from "../assets/images/facebookIcon.svg";
+import LinkedInIcon from "../assets/images/LinkedinIcon.svg";
+import FertilizerLogo from "../assets/images/PlantFertilizerAI.svg";
+import Icon from "../components/atoms/Icon";
+import { useNavigate } from "react-router-dom";
+import Input from "../components/atoms/Input";
 
- const LoginPage = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
+const LoginPage = ({ onLogin }) => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ name: 'John Doe', email });
+    onLogin({ name: "John Doe", email });
   };
-  
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12 flex items-center justify-center">
-      <div className="max-w-md w-full mx-auto px-6">
-        <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-200">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <Leaf size={40} className="text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-6 flex items-center justify-center">
+    <div className="max-w-[400px] w-full mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Icon src={FertilizerLogo} alt="Logo" className="w-9 h-9" />
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 font-poppins mb-2">Welcome Back</h2>
-            <p className="text-gray-600 font-inter">Sign in to your OrganicFert account</p>
+
+            <h2 className="text-3xl font-bold text-gray-900 font-poppins mb-1">
+              Welcome Back
+            </h2>
+
+            <p className="text-gray-600 text-sm font-inter">
+              Sign in to your OrganicFert account
+            </p>
           </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-5">
+
+          <form onSubmit={handleSubmit} className="space-y-3">
             <Input
               label="Email Address"
               type="email"
@@ -33,6 +46,7 @@ import  GoogleIcon from '../assets/images/googleIcon.jpg';
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
             />
+
             <Input
               label="Password"
               type="password"
@@ -40,41 +54,57 @@ import  GoogleIcon from '../assets/images/googleIcon.jpg';
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
             />
-            
-            <div className="flex items-center justify-between text-sm">
+
+            <div className="flex items-center justify-between text-xs">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 text-green-600 rounded" />
+                <input
+                  type="checkbox"
+                  className="w-3.5 h-3.5 text-green-600"
+                />
                 <span className="text-gray-600 font-inter">Remember me</span>
               </label>
-              <a href="#" className="text-green-600 font-semibold hover:underline font-inter">Forgot password?</a>
+
+              <a
+                href="#"
+                className="text-green-600 font-semibold hover:underline font-inter"
+              >
+                Forgot password?
+              </a>
             </div>
-            
-            <Button type="submit" variant="primary" size="lg" className="w-full mt-6">
-              <LogIn size={20} />
+
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              className="w-full mt-4"
+            >
+              <LogIn size={14} />
               Sign In
             </Button>
-            {/* Google and Github Auth */}
-            <div className="flex items-center flex-col gap-4 mt-4">
-              <Button variant="outline" size="lg" className="flex-1 flex items-center justify-center gap-2">
-               {/* <Icon className="text-gray-600" src={GoogleIcon} /> */}
-                Sign in with Google
-              </Button>
-              <Button variant="outline" size="lg" className="flex-1 flex items-center justify-center gap-2">
-                <Github size={20} className="text-gray-600" />
-                Sign in with GitHub
-              </Button>
+
+            <div className="flex flex-col items-center gap-3 mt-4 border-t pt-4 border-gray-200 text-sm">
+              or sign in with
+              <div className="flex items-center gap-3">
+                <Icon src={GoogleIcon} alt="Google" className="w-5 h-5" />
+                <Icon src={GithubIcon} alt="Github" className="w-5 h-5" />
+                <Icon src={FacebookIcon} alt="Facebook" className="w-5 h-5" />
+                <Icon src={LinkedInIcon} alt="LinkedIn" className="w-5 h-5" />
+              </div>
             </div>
           </form>
-          
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 font-inter">
-              Don't have an account? <span className="text-green-600 font-bold cursor-pointer hover:underline">Sign up free</span>
+
+          <div className="mt-6 text-center text-sm">
+            <p className="text-gray-600 font-inter">
+              Don't have an account?{" "}
+              <span className="text-green-600 font-bold hover:underline cursor-pointer">
+                Sign up free
+              </span>
             </p>
           </div>
-          
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-500 font-inter">
-              <Shield size={14} />
+
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-center gap-2 text-xs text-gray-500 font-inter">
+              <Shield size={12} />
               <span>Secure SSL Encryption</span>
             </div>
           </div>
@@ -83,4 +113,5 @@ import  GoogleIcon from '../assets/images/googleIcon.jpg';
     </div>
   );
 };
+
 export default LoginPage;

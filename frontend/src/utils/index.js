@@ -5,42 +5,53 @@ export const PRODUCTDATA=[
       name: 'Organic NPK 10-10-10',
       description: 'Balanced all-purpose fertilizer perfect for vegetables and flowers',
       price: 499,
-      stock: 25
+      stock: 25,
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmV0Y2h8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
     },
     {
       id: 2,
       name: 'Neem Oil Concentrate',
       description: 'Natural pest control and fungicide for healthy plants',
       price: 349,
-      stock: 40
-    },
+      stock: 40,
+      //  unsplash image different
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmV0Y2h8ZW58MHx8MHx8fDA%3D&w=1000&q=80'},
     {
       id: 3,
       name: 'Bone Meal Fertilizer',
       description: 'High phosphorus content for strong roots and blooms',
       price: 299,
-      stock: 30
+      stock: 30,
+         //  unsplash image different
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmV0Y2h8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
     },
     {
       id: 4,
       name: 'Fish Emulsion',
       description: 'Quick-release nitrogen boost for lush green growth',
       price: 399,
-      stock: 20
+      stock: 20,
+      //  unsplash image
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmV0Y2h8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
     },
     {
       id: 5,
       name: 'Vermicompost Premium',
       description: 'Rich organic matter from earthworm castings',
       price: 249,
-      stock: 50
+      stock: 50,
+      //  unsplash image
+      image:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmV0Y2h8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
+
     },
     {
       id: 6,
       name: 'Seaweed Extract',
       description: 'Natural growth stimulant with trace minerals',
       price: 449,
-      stock: 0
+      stock: 0,
+      // unsplash
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmV0Y2h8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
     }
   ];
    export const ARTICLES = [

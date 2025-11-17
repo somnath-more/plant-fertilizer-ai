@@ -1,21 +1,25 @@
-import { Award, Search, Shield, Sparkles, TrendingUp } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '../components/atoms/Button';
-import { FeatureCard } from '../components/molecules/FeatureCard';
-import { Input } from '../components/atoms/Input';
-import { ProductCard } from '../components/molecules/ProductCard';
-import { useProductStore } from '../store/useProductStore';
-import { useCartStore } from '../store/useCartStore';
- const HomePage = () => {
-   const products = useProductStore((state) => state.products);
+import { Award, Shield, Sparkles, TrendingUp } from "lucide-react";
+import { use, useState } from "react";
+import { Button } from "../components/atoms/Button";
+import { FeatureCard } from "../components/molecules/FeatureCard";
+import { ProductCard } from "../components/molecules/ProductCard";
+import { Search } from "@mui/icons-material";
+import { useProductStore } from "../store/useProductStore";
+import { useCartStore } from "../store/useCartStore";
+import Input from "../components/atoms/Input";
+import { useNavigate } from "react-router-dom";
+const HomePage = () => {
+  const navigate = useNavigate();
+  const products = useProductStore((state) => state.products);
   const addToCart = useCartStore((state) => state.addToCart);
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
@@ -27,14 +31,18 @@ import { useCartStore } from '../store/useCartStore';
               Grow Your Garden <span className="text-green-200">Naturally</span>
             </h2>
             <p className="text-xl text-green-100 mb-8 font-inter leading-relaxed">
-              Premium organic fertilizers powered by AI recommendations for healthier plants and sustainable growth
+              Premium organic fertilizers powered by AI recommendations for
+              healthier plants and sustainable growth
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Button variant="glass" size="lg" >
+              <Button variant="glass" size="lg">
                 <Sparkles size={20} />
                 Try AI Diagnosis
               </Button>
-              <Button variant="outline" size="lg" >
+              {/* want to jump products id onClick */}
+              <Button variant="glass" size="lg" onClick={() => {
+                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+              }} >
                 Shop Now
               </Button>
             </div>
@@ -46,6 +54,7 @@ import { useCartStore } from '../store/useCartStore';
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
           <FeatureCard
+            onCardClick={() => {navigate("/ai-diagnosis")}}
             icon={Sparkles}
             title="AI-Powered"
             description="Get personalized recommendations using advanced AI technology"
@@ -67,9 +76,15 @@ import { useCartStore } from '../store/useCartStore';
           />
         </div>
 
-        {/* Search Section */}
-        <div className="mb-12">
-          <h3 className="text-4xl font-bold text-gray-900 mb-6 font-poppins">Premium Products</h3>
+        <div className="mb-12" id="products">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-4xl font-bold text-gray-900 mb-6 font-poppins">
+              Premium Products
+            </h3>
+            <Button variant="glass" size="lg">
+              Add Product
+            </Button>
+          </div>
           <Input
             placeholder="Search for organic fertilizers..."
             value={searchTerm}
@@ -77,15 +92,21 @@ import { useCartStore } from '../store/useCartStore';
             icon={Search}
           />
         </div>
-        
+
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} addToCart={addToCart} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" >
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={() => {
+                addToCart(product);
+              }}
+            />
           ))}
         </div>
       </div>
     </div>
   );
 };
- export default HomePage;
+export default HomePage;

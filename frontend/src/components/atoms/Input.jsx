@@ -1,16 +1,73 @@
+import React, { useState } from "react";
+import { TextField, InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { sizes } from "../../theme";
+const Input = ({
+  label,
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  icon: LeftIcon,
+  fullWidth = true,
+  size = "md",
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
 
-export const Input = ({ label, type = 'text', value, onChange, placeholder, icon: Icon }) => (
-  <div className="w-full">
-    {label && <label className="block text-sm font-semibold text-gray-700 mb-2 font-inter">{label}</label>}
-    <div className="relative">
-      {Icon && <Icon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />}
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className={`w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 font-inter transition-all duration-200 bg-white shadow-sm hover:shadow-md ${Icon ? 'pl-12' : ''}`}
-      />
-    </div>
-  </div>
-);
+  const isPassword = type === "password";
+
+  return (
+    <TextField
+      fullWidth={fullWidth}
+      label={label}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      type={isPassword && showPassword ? "text" : type}
+      slotProps={{
+        input: {
+          style: {
+            fontSize: sizes[size],
+          },
+          startAdornment: LeftIcon ? (
+            <InputAdornment position="start">
+              <LeftIcon style={{ color: "#9ca3af" }} />
+            </InputAdornment>
+          ) : null,
+
+          endAdornment: isPassword ? (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ) : null,
+        },
+      }}
+      sx={{
+     
+        "& .MuiOutlinedInput-root": {
+          borderRadius: "12px",
+          background: "#fff",
+          transition: "0.2s",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+          fontSize: sizes[size],
+
+
+          "&:hover": {
+            boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+          },
+
+          "&.Mui-focused": {
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          },
+        },
+      }}
+    />
+  );
+};
+
+export default Input;
