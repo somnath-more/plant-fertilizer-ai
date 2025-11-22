@@ -1,0 +1,36 @@
+type Product {
+    id: ID!
+    name: String!
+    description: String
+    price: Float!
+    stock: Int!
+    category: String
+    imageUrl: String
+    npkRatio: String
+    weight: String
+    organic: Boolean
+    featured: Boolean
+    rating: Int
+    reviewCount: Int
+    createdAt: String
+    updatedAt: String
+}
+
+type Query {
+    products: [Product!]!
+    product(id: ID!): Product
+    searchProducts(query: String!): [Product!]!
+    productsByCategory(category: String!): [Product!]!
+}
+
+type Mutation {
+    createProduct(
+        name: String!,
+        description: String,
+        price: Float!,
+        stock: Int!,
+        category: String
+    ): Product!
+
+    updateProductStock(id: ID!, stock: Int!): Product!
+}
