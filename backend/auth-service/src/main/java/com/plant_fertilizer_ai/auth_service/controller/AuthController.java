@@ -1,46 +1,48 @@
 package com.plant_fertilizer_ai.auth_service.controller;
 
+import com.plant_fertilizer_ai.auth_service.dto.LoginRequest;
+import com.plant_fertilizer_ai.auth_service.dto.LoginResponse;
 import com.plant_fertilizer_ai.auth_service.dto.RegisterRequest;
-import com.plant_fertilizer_ai.auth_service.model.User;
-import com.plant_fertilizer_ai.auth_service.security.AuthenticationManager;
 import com.plant_fertilizer_ai.auth_service.security.JwtUtil;
+import com.plant_fertilizer_ai.auth_service.service.AuthService;
 import com.plant_fertilizer_ai.auth_service.service.UserService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
-    //    Logger
     private final UserService userService;
+    private final AuthService authService;
 
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
-
-    public AuthController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AuthController(UserService userService, AuthService authService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager;
+        this.authService = authService;
     }
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(AuthController.class);
+    Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
         logger.info("Registering user: {}", request);
-//        Automatically catches invalid inputs — you do not need to call it manually.
-        User user = userService.registerUser(request);
+        Optional<?> registerResponse = userService.registerUser(request);
+        return ResponseEntity.status(HttpStatus.OK).body(registerResponse);
+    }
 
-        // Generate token when ready
-        String token = "testtoken";
-
-        return ResponseEntity.ok("User registered successfully..phello..");
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        logger.info("Logging in user with email: {}", loginRequest.getEmail());
+        // Authenticate user
+        LoginResponse loginResponse = authService.authenticate(loginRequest);
+        return ResponseEntity.ok(loginResponse);
     }
 
     @GetMapping("/health")
