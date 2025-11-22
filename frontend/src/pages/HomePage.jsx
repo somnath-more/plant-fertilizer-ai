@@ -75,7 +75,7 @@ const HomePage = () => {
             description="24/7 chatbot assistance from fertilizer experts"
           />
         </div>
-
+        
         <div className="mb-12" id="products">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-4xl font-bold text-gray-900 mb-6 font-poppins">
