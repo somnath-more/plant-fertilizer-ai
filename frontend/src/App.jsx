@@ -35,8 +35,8 @@ export default function App() {
   </Route>
 
   {/* Routes WITHOUT layout */}
-  <Route path="/login" element={<LoginPage onLogin={(data) => {handleLogin(data)}} />} />
-  <Route path="/register" element={<SignupPage onRegister={(data) => {handleLogin(data)}} />} />
+  <Route path="/login" element={<LoginPage onLogin={(data) => {handleLogin(data)}} onSignUp={() => {navigate("/register")}} />} />
+  <Route path="/register" element={<SignupPage onRegister={(data) => {handleLogin(data)}} onLogin={() => {navigate("/login")}} />} />
   <Route path="*" element={<div>404 Not Found</div>} />
 
 </Routes>

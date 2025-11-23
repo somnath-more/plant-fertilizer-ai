@@ -8,32 +8,49 @@ import LinkedInIcon from "../assets/images/LinkedinIcon.svg";
 import FertilizerLogo from "../assets/images/PlantFertilizerAI.svg";
 import Icon from "../components/atoms/Icon";
 import Input from "../components/atoms/Input";
-import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { baseStyles, sizes, variants } from "../theme/themeStyles";
+import { fontFamily } from "../theme/customStyles";
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = ({ onLogin, onSignUp }) => {
   const { loginWithRedirect } = useAuth0();
-
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [helperText, setHelperText] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
-    onLogin({ name: "John Doe", email });
-  };
-  const goToSignup = () => {
-    navigate("/register");
+    let isValid = true;
+    if (email === "") {
+      setHelperText((prev) => ({ ...prev, email: "Email is required" }));
+      isValid = false;
+    }
+    if (password === "") {
+      setHelperText((prev) => ({ ...prev, password: "Password is required" }));
+      isValid = false;
+    }
+    if (isValid) {
+      onLogin({ name: "John Doe", email });
+    }
+    setLoading(false);
   };
   const handleAuthLogin = (connection) => {
-      if(connection){
-        console.log(connection);
-        loginWithRedirect({
-          connection:connection
-        });
-      }else{
-        loginWithRedirect();
-      }
+    if (connection) {
+      console.log(connection);
+      loginWithRedirect({
+        connection: connection,
+      });
+    } else {
+      loginWithRedirect();
+    }
   };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    onSignUp();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-6 flex items-center justify-center">
       <div className="max-w-[400px] w-full mx-auto px-4">
@@ -43,15 +60,37 @@ const LoginPage = ({ onLogin }) => {
               <Icon src={FertilizerLogo} alt="Logo" className="w-9 h-9" />
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 font-poppins mb-1">Welcome Back</h2>
+            <h2 className="text-3xl font-bold text-gray-900 font-poppins mb-1">
+              Welcome Back
+            </h2>
 
-            <p className="text-gray-600 text-sm font-inter">Sign in to your OrganicFert account</p>
+            <p className="text-gray-600 text-sm font-inter">
+              Sign in to your OrganicFert account
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
-            <Input label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" />
+            <Input
+              helperText={helperText.email}
+              error={helperText.email !== ""}
+              label="Email Address"
+              size="small"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+            />
 
-            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+            <Input
+              label="Password"
+              size="small"
+              type="password"
+              error={helperText.password !== ""}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              helperText={helperText.password}
+            />
 
             <div className="flex items-center justify-between text-xs">
               <label className="flex items-center gap-2 cursor-pointer">
@@ -59,12 +98,23 @@ const LoginPage = ({ onLogin }) => {
                 <span className="text-gray-600 font-inter">Remember me</span>
               </label>
 
-              <a href="#" className="text-green-600 font-semibold hover:underline font-inter">
+              <a
+                href="#"
+                className="text-green-600 font-semibold hover:underline font-inter"
+              >
                 Forgot password?
               </a>
             </div>
 
-            <Button type="submit" variant="primary" size="md" className="w-full mt-4">
+            <Button
+              type="submit"
+              size="small"
+              loading={loading}
+              disabled={loading}
+              variant="contained"
+              style={{ fontFamily: fontFamily.poppins }}
+              className={`${baseStyles} ${variants.primary} ${sizes.md} w-full mt-4`}
+            >
               <LogIn size={14} />
               Sign In
             </Button>
@@ -72,10 +122,30 @@ const LoginPage = ({ onLogin }) => {
             <div className="flex flex-col items-center gap-3 mt-4 border-t pt-4 border-gray-200 text-sm">
               or sign in with
               <div className="flex items-center gap-3">
-                <Icon  src={GoogleIcon} onIconClick={()=>handleAuthLogin('google-oauth2')} alt="Google" className="cursor-pointer w-5 h-5" />
-                <Icon  src={GithubIcon} onIconClick={()=>handleAuthLogin('github')}  alt="Github" className="cursor-pointer w-5 h-5" />
-                <Icon  src={FacebookIcon} onIconClick={()=>handleAuthLogin('facebook')}  alt="Facebook" className="cursor-pointer w-5 h-5" />
-                <Icon  src={LinkedInIcon}onIconClick={()=>handleAuthLogin('linkedin')}  alt="LinkedIn" className="cursor-pointer w-5 h-5" />
+                <Icon
+                  src={GoogleIcon}
+                  onIconClick={() => handleAuthLogin("google-oauth2")}
+                  alt="Google"
+                  className="cursor-pointer w-5 h-5"
+                />
+                <Icon
+                  src={GithubIcon}
+                  onIconClick={() => handleAuthLogin("github")}
+                  alt="Github"
+                  className="cursor-pointer w-5 h-5"
+                />
+                <Icon
+                  src={FacebookIcon}
+                  onIconClick={() => handleAuthLogin("facebook")}
+                  alt="Facebook"
+                  className="cursor-pointer w-5 h-5"
+                />
+                <Icon
+                  src={LinkedInIcon}
+                  onIconClick={() => handleAuthLogin("linkedin")}
+                  alt="LinkedIn"
+                  className="cursor-pointer w-5 h-5"
+                />
               </div>
             </div>
           </form>
@@ -83,7 +153,10 @@ const LoginPage = ({ onLogin }) => {
           <div className="mt-6 text-center text-sm">
             <p className="text-gray-600 font-inter">
               Don't have an account?{" "}
-              <span onClick={goToSignup} className="text-green-600 font-bold hover:underline cursor-pointer">
+              <span
+                onClick={handleSignUp}
+                className="text-green-600 font-bold hover:underline cursor-pointer"
+              >
                 Sign up free
               </span>
             </p>

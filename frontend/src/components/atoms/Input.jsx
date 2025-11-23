@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { sizes } from "../../theme";
 const Input = ({
   label,
   type = "text",
@@ -10,7 +9,9 @@ const Input = ({
   placeholder,
   icon: LeftIcon,
   fullWidth = true,
-  size = "md",
+  size = "medium",
+  helperText,
+  error = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -23,12 +24,12 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      size={size}
+      helperText={helperText}
+      error={error}
       type={isPassword && showPassword ? "text" : type}
       slotProps={{
         input: {
-          style: {
-            fontSize: sizes[size],
-          },
           startAdornment: LeftIcon ? (
             <InputAdornment position="start">
               <LeftIcon style={{ color: "#9ca3af" }} />
@@ -48,14 +49,11 @@ const Input = ({
         },
       }}
       sx={{
-     
         "& .MuiOutlinedInput-root": {
           borderRadius: "12px",
           background: "#fff",
           transition: "0.2s",
           boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-          fontSize: sizes[size],
-
 
           "&:hover": {
             boxShadow: "0 2px 6px rgba(0,0,0,0.12)",

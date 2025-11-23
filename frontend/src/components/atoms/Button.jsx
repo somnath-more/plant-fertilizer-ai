@@ -1,17 +1,36 @@
-import { baseStyles, variants } from "../../theme";
-import { sizes } from "../../theme";
+import { Button as MuiButton } from "@mui/material";
 
-export const Button = ({ children, onClick, variant = 'primary', size = 'md', disabled, className = '' }) => {
- 
+// can i create object of the props ans pass to the component
 
-  
+export const Button = ({
+  color = "primary",
+  type,
+  loading,
+  children,
+  onClick,
+  variant = "text",
+  size = "medium",
+  disabled,
+  className = "",
+  startIcon,
+  style,
+}) => {
   return (
-    <button
+    <MuiButton
+      type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${disabled ? 'opacity-50 cursor-not-allowed transform-none' : ''} ${className}`}
+      size={size}
+      variant={variant}
+      startIcon={startIcon}
+      color={color}
+      loading={loading}
+      className={`${className} normal-case`}
+      sx={{
+        ...style,
+      }}
     >
       {children}
-    </button>
+    </MuiButton>
   );
 };
