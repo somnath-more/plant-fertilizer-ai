@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import MainLayout from "./layouts/MainLayout";
 import AIDiagnosisPage from "./pages/AIDiagnosisPage";
 import ChatbotPage from "./pages/ChatbotPage";
+import SignupPage from "./pages/SignupPage";
 
 
 
@@ -35,6 +36,7 @@ export default function App() {
 
   {/* Routes WITHOUT layout */}
   <Route path="/login" element={<LoginPage onLogin={(data) => {handleLogin(data)}} />} />
+  <Route path="/register" element={<SignupPage onRegister={(data) => {handleLogin(data)}} />} />
   <Route path="*" element={<div>404 Not Found</div>} />
 
 </Routes>

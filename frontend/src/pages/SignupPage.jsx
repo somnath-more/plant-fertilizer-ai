@@ -11,20 +11,20 @@ import Input from "../components/atoms/Input";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const LoginPage = ({ onLogin }) => {
-  const { loginWithRedirect } = useAuth0();
-
-  const navigate = useNavigate();
+const SignupPage = ({ onRegister }) => {
+  const { loginWithRedirect }=useAuth0();
+  const navigate=useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ name: "John Doe", email });
+    onRegister({ name, email, password, confirmPassword });
   };
-  const goToSignup = () => {
-    navigate("/register");
-  };
-  const handleAuthLogin = (connection) => {
+    const handleAuthLogin = (connection) => {
       if(connection){
         console.log(connection);
         loginWithRedirect({
@@ -43,48 +43,89 @@ const LoginPage = ({ onLogin }) => {
               <Icon src={FertilizerLogo} alt="Logo" className="w-9 h-9" />
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 font-poppins mb-1">Welcome Back</h2>
+            <h2 className="text-3xl font-bold text-gray-900 font-poppins mb-1">
+              Inorganic Fertilizer AI
+            </h2>
 
-            <p className="text-gray-600 text-sm font-inter">Sign in to your OrganicFert account</p>
+            <p className="text-gray-600 text-sm font-inter">
+              Sign up for your OrganicFert account
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
-            <Input label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" />
+              <Input
+              label="Username"
+              type="test"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Username"
+            />
+            <Input
+              label="E-mail address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+            />
 
-            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+            <Input
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+            <Input
+              label="Confirm Password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
+            />
 
             <div className="flex items-center justify-between text-xs">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-3.5 h-3.5 text-green-600" />
+                <input
+                  type="checkbox"
+                  className="w-3.5 h-3.5 text-green-600"
+                />
                 <span className="text-gray-600 font-inter">Remember me</span>
               </label>
 
-              <a href="#" className="text-green-600 font-semibold hover:underline font-inter">
+              <a
+                href="#"
+                className="text-green-600 font-semibold hover:underline font-inter"
+              >
                 Forgot password?
               </a>
             </div>
 
-            <Button type="submit" variant="primary" size="md" className="w-full mt-4">
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              className="w-full mt-4"
+            >
               <LogIn size={14} />
-              Sign In
+              Sign Up
             </Button>
 
             <div className="flex flex-col items-center gap-3 mt-4 border-t pt-4 border-gray-200 text-sm">
               or sign in with
               <div className="flex items-center gap-3">
-                <Icon  src={GoogleIcon} onIconClick={()=>handleAuthLogin('google-oauth2')} alt="Google" className="cursor-pointer w-5 h-5" />
-                <Icon  src={GithubIcon} onIconClick={()=>handleAuthLogin('github')}  alt="Github" className="cursor-pointer w-5 h-5" />
-                <Icon  src={FacebookIcon} onIconClick={()=>handleAuthLogin('facebook')}  alt="Facebook" className="cursor-pointer w-5 h-5" />
-                <Icon  src={LinkedInIcon}onIconClick={()=>handleAuthLogin('linkedin')}  alt="LinkedIn" className="cursor-pointer w-5 h-5" />
+                <Icon src={GoogleIcon}  onIconClick={()=>handleAuthLogin('google-oauth2')} alt="Google" className="cursor-pointer w-5 h-5" />
+                <Icon src={GithubIcon}onIconClick={()=>handleAuthLogin('github')} alt="Github" className="cursor-pointer w-5 h-5" />
+                <Icon src={FacebookIcon} onIconClick={()=>handleAuthLogin('facebook')} alt="Facebook" className="cursor-pointer w-5 h-5" />
+                <Icon src={LinkedInIcon} onIconClick={()=>handleAuthLogin('linkedin')} alt="LinkedIn" className="cursor-pointer w-5 h-5" />
               </div>
             </div>
           </form>
 
           <div className="mt-6 text-center text-sm">
             <p className="text-gray-600 font-inter">
-              Don't have an account?{" "}
-              <span onClick={goToSignup} className="text-green-600 font-bold hover:underline cursor-pointer">
-                Sign up free
+               Already have an account?{" "}
+              <span onClick={()=>navigate('/login')} className="text-green-600 font-bold hover:underline cursor-pointer">
+                Sign in
               </span>
             </p>
           </div>
@@ -101,4 +142,4 @@ const LoginPage = ({ onLogin }) => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;
