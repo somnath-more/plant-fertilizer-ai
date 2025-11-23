@@ -8,6 +8,8 @@ import { useProductStore } from "../store/useProductStore";
 import { useCartStore } from "../store/useCartStore";
 import Input from "../components/atoms/Input";
 import { useNavigate } from "react-router-dom";
+import { fontFamily } from "../theme/customStyles";
+import { baseStyles, sizes, variants } from "../theme/themeStyles";
 const HomePage = () => {
   const navigate = useNavigate();
   const products = useProductStore((state) => state.products);
@@ -35,14 +37,26 @@ const HomePage = () => {
               healthier plants and sustainable growth
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Button variant="glass" size="lg">
+              <Button variant="glass" size="lg" 
+                style={{ fontFamily: fontFamily.poppins }}
+                className={`${baseStyles} ${variants.outline}`}
+                onClick={() => navigate("/ai-diagnosis")}
+              >
                 <Sparkles size={20} />
                 Try AI Diagnosis
               </Button>
               {/* want to jump products id onClick */}
-              <Button variant="glass" size="lg" onClick={() => {
-                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-              }} >
+              <Button
+                variant="glass"
+                size="lg"
+                onClick={() => {
+                  document
+                    .getElementById("products")
+                    .scrollIntoView({ behavior: "smooth" });
+                }}
+                style={{ fontFamily: fontFamily.poppins }}
+                className={`${baseStyles} ${variants.outline}`}
+              >
                 Shop Now
               </Button>
             </div>
@@ -54,7 +68,9 @@ const HomePage = () => {
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
           <FeatureCard
-            onCardClick={() => {navigate("/ai-diagnosis")}}
+            onCardClick={() => {
+              navigate("/ai-diagnosis");
+            }}
             icon={Sparkles}
             title="AI-Powered"
             description="Get personalized recommendations using advanced AI technology"
@@ -75,13 +91,18 @@ const HomePage = () => {
             description="24/7 chatbot assistance from fertilizer experts"
           />
         </div>
-        
+
         <div className="mb-12" id="products">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-4xl font-bold text-gray-900 mb-6 font-poppins">
               Premium Products
             </h3>
-            <Button variant="glass" size="lg">
+            <Button
+              size="small"
+              variant="contained"
+              style={{ fontFamily: fontFamily.poppins }}
+              className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4`}
+            >
               Add Product
             </Button>
           </div>
@@ -94,7 +115,7 @@ const HomePage = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

@@ -157,9 +157,9 @@ const SignupPage = ({ onRegister, onLogin }) => {
               type="submit"
               size="small"
               loading={loading}
-              variant="contained"
-              color="inherit"
               disabled={loading}
+               variant="contained"
+
               style={{ fontFamily: fontFamily.poppins }}
               className={`${baseStyles} ${variants.primary} ${sizes.md} w-full mt-4`}
             >

@@ -21,12 +21,20 @@ export const Button = ({
       onClick={onClick}
       disabled={disabled}
       size={size}
-      variant={variant}
+      variant={
+        ["text", "outlined", "contained"].includes(variant) ? variant : "text"
+      } // fallback
       startIcon={startIcon}
       color={color}
       loading={loading}
       className={`${className} normal-case`}
       sx={{
+        ...(variant === "glass" && {
+          backdropFilter: "blur(10px)",
+          background: "rgba(255,255,255,0.15)",
+          border: "1px solid rgba(255,255,255,0.3)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+        }),
         ...style,
       }}
     >
