@@ -1,9 +1,6 @@
 import { Button as MuiButton } from "@mui/material";
 
-// can i create object of the props ans pass to the component
-
 export const Button = ({
-  color = "primary",
   type,
   loading,
   children,
@@ -14,7 +11,10 @@ export const Button = ({
   className = "",
   startIcon,
   style,
+  sx,
 }) => {
+  console.log(className);
+
   return (
     <MuiButton
       type={type}
@@ -22,21 +22,13 @@ export const Button = ({
       disabled={disabled}
       size={size}
       variant={
-        ["text", "outlined", "contained"].includes(variant) ? variant : "text"
-      } // fallback
-      startIcon={startIcon}
-      color={color}
+        variant
+      }
       loading={loading}
+      startIcon={startIcon}
       className={`${className} normal-case`}
-      sx={{
-        ...(variant === "glass" && {
-          backdropFilter: "blur(10px)",
-          background: "rgba(255,255,255,0.15)",
-          border: "1px solid rgba(255,255,255,0.3)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        }),
-        ...style,
-      }}
+      style={style}
+      sx={sx}
     >
       {children}
     </MuiButton>

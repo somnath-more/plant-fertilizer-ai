@@ -1,5 +1,5 @@
 import { Award, Shield, Sparkles, TrendingUp } from "lucide-react";
-import { use, useState } from "react";
+import { useState } from "react";
 import { Button } from "../components/atoms/Button";
 import { FeatureCard } from "../components/molecules/FeatureCard";
 import { ProductCard } from "../components/molecules/ProductCard";
@@ -37,9 +37,11 @@ const HomePage = () => {
               healthier plants and sustainable growth
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Button variant="glass" size="lg" 
+              <Button
+                size="small"
+                variant="contained"
                 style={{ fontFamily: fontFamily.poppins }}
-                className={`${baseStyles} ${variants.outline}`}
+                className={`${baseStyles} ${variants.glass} ${sizes.md}`}
                 onClick={() => navigate("/ai-diagnosis")}
               >
                 <Sparkles size={20} />
@@ -47,15 +49,15 @@ const HomePage = () => {
               </Button>
               {/* want to jump products id onClick */}
               <Button
-                variant="glass"
-                size="lg"
+                size="small"
+                variant="contained"
+                style={{ fontFamily: fontFamily.poppins }}
+                className={`${baseStyles} ${variants.glass} ${sizes.md}`}
                 onClick={() => {
                   document
                     .getElementById("products")
                     .scrollIntoView({ behavior: "smooth" });
                 }}
-                style={{ fontFamily: fontFamily.poppins }}
-                className={`${baseStyles} ${variants.outline}`}
               >
                 Shop Now
               </Button>
