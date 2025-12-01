@@ -13,7 +13,6 @@ export const Button = ({
   style,
   sx,
 }) => {
-  console.log(className);
 
   return (
     <MuiButton

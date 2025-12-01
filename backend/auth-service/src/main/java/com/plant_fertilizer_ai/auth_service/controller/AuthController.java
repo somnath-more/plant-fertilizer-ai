@@ -7,6 +7,7 @@ import com.plant_fertilizer_ai.auth_service.security.JwtUtil;
 import com.plant_fertilizer_ai.auth_service.service.AuthService;
 import com.plant_fertilizer_ai.auth_service.service.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/auth")
-@CrossOrigin(origins = "*")
 public class AuthController {
     private final UserService userService;
     private final AuthService authService;

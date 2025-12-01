@@ -8,37 +8,49 @@ import MainLayout from "./layouts/MainLayout";
 import AIDiagnosisPage from "./pages/AIDiagnosisPage";
 import ChatbotPage from "./pages/ChatbotPage";
 import SignupPage from "./pages/SignupPage";
-
-
-
+import { loginUser, registerUser } from "./services/api/authService";
+import useAlert from "./hooks/useAlert";
+import AppRoutes from "../routes/AppRoutes";
 
 export default function App() {
-  const navigate=useNavigate();
-  const handleLogin=(data)=>{
-    console.log(data);
+  const navigate = useNavigate();
+  const { success, error } = useAlert();
+
+  // Login Handler
+  const handleLogin = async (formData) => {
+    const { apiResponse, message, status } = await loginUser(formData);
+
+    if (!status) {
+      error(message);
+      return;
+    }
+
+    // Save token
+    localStorage.setItem("token", apiResponse.token);
+    localStorage.setItem("user", JSON.stringify(apiResponse.user));
+
+    success(message);
     navigate("/home");
-  }
+  };
+
+  // Register Handler
+  const handleRegister = async (formData) => {
+    const { apiResponse, message, status } = await registerUser(formData);
+
+    if (!status) {
+      error(message);
+      return;
+    }
+
+    success(message);
+    navigate("/login");
+  };
+
   return (
-<Routes>
-
-  {/* Layout Route */}
-  <Route element={<MainLayout />}>
-
-    <Route path="/" element={<HomePage />} />
-    <Route path="/home" element={<HomePage />} />
-    <Route path="/shop" element={<ShopPage />} />
-    <Route path="/cart" element={<CartPage />} />
-    <Route path="/blog" element={<BlogPage />} />
-    <Route path="/chatbot" element={<ChatbotPage />} />
-    <Route path="/ai-diagnosis" element={<AIDiagnosisPage />} />
-
-  </Route>
-
-  {/* Routes WITHOUT layout */}
-  <Route path="/login" element={<LoginPage onLogin={(data) => {handleLogin(data)}} onSignUp={() => {navigate("/register")}} />} />
-  <Route path="/register" element={<SignupPage onRegister={(data) => {handleLogin(data)}} onLogin={() => {navigate("/login")}} />} />
-  <Route path="*" element={<div>404 Not Found</div>} />
-
-</Routes>
+    <AppRoutes
+      handleLogin={handleLogin}
+      handleRegister={handleRegister}
+      navigate={navigate}
+    />
   );
 }

@@ -31,7 +31,7 @@ const LoginPage = ({ onLogin, onSignUp }) => {
       isValid = false;
     }
     if (isValid) {
-      onLogin({ name: "John Doe", email });
+      onLogin({  email,password });
     }
     setLoading(false);
   };
