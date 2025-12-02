@@ -17,10 +17,10 @@ import java.util.List;
 public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
     private static final String SECRET_KEY = "organic_plant_fertilizer_must_be_at_least_256_bits_long_for_hs256";
     private static final List<String> PUBLIC_PATHS = List.of(
-            "/api/auth/login",
-            "/api/auth/register",
-            "/api/products",
-            "/graphql"
+            "/api/v1/auth/login",
+            "/api/v1/auth/register",
+            "/api/v1/products",
+            "/v1/graphql"
     );
 
     public JwtAuthenticationFilter() {

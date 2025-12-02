@@ -2,8 +2,9 @@ import { Badge, BookOpen, ChevronRight } from "lucide-react";
 import { Button } from "../components/atoms/Button";
 import { useState } from "react";
 import { ARTICLES } from "../utils";
+import { sizes } from "../theme/themeStyles";
 
- const BlogPage = () => {
+const BlogPage = () => {
   const [articles] = useState(ARTICLES);
 
   return (
@@ -53,7 +54,11 @@ import { ARTICLES } from "../utils";
                   <span className="text-xs text-gray-500 font-inter">
                     {article.date}
                   </span>
-                  <Button variant="outline" size="sm">
+                  <Button
+                    size="small"
+                    variant="text"
+                    className={`w-full mt-4 gap-1 flex items-center justify-center !text-green-600 font-semibold !decoration-2 !decoration-green-600 !hover:underline hover:text-green-600`}
+                  >
                     Read More <ChevronRight size={16} />
                   </Button>
                 </div>

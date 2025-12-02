@@ -10,18 +10,23 @@ import Input from "../components/atoms/Input";
 import { useNavigate } from "react-router-dom";
 import { fontFamily } from "../theme/customStyles";
 import { baseStyles, sizes, variants } from "../theme/themeStyles";
+import useFetch from "../hooks/useFetch";
+import { getAllProducts } from "../services/api/productService";
 const HomePage = () => {
   const navigate = useNavigate();
-  const products = useProductStore((state) => state.products);
+  // const products = useProductStore((state) => state.products);
   const addToCart = useCartStore((state) => state.addToCart);
+  const { data: products, loading, error, refetch } = useFetch(getAllProducts, []);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredProducts = products.filter(
+  const filteredProducts = products?.data?.filter(
     (p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  console.log("products", products?.data);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
@@ -118,7 +123,7 @@ const HomePage = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map((product) => (
+          {filteredProducts?.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

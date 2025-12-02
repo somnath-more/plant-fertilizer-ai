@@ -35,7 +35,7 @@ export const ProductCard = ({ product, onAddToCart }) => (
       {/* <Package size={72} className="text-green-500 relative z-10 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500" />*/}
       {/* <Camera size={72} className="text-green-500 relative z-10 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500" /> product.image */}
       <img
-        src={product.image}
+        src={product.imageUrl}
         alt={product.name}
         className="w-full h-full object-cover"
       />

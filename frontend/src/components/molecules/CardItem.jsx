@@ -13,11 +13,11 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => (
       <p className="text-sm text-gray-600 font-inter mt-1">₹{item.price} each</p>
     </div>
     <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-1">
-      <Button variant="secondary" size="sm" onClick={() => onUpdateQuantity(item.id, -1)}>
+      <Button variant="secondary" size="sm" onClick={() => onUpdateQuantity(item, -1)}>
         <Minus size={14} />
       </Button>
       <span className="w-10 text-center font-bold text-lg">{item.quantity}</span>
-      <Button variant="secondary" size="sm" onClick={() => onUpdateQuantity(item.id, 1)}>
+      <Button variant="secondary" size="sm" onClick={() => onUpdateQuantity(item, 1)}>
         <Plus size={14} />
       </Button>
     </div>

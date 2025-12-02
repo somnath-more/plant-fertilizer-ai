@@ -11,8 +11,18 @@ import ChatbotPage from "../src/pages/ChatbotPage";
 import AIDiagnosisPage from "../src/pages/AIDiagnosisPage";
 import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
+import useAlert from "../src/hooks/useAlert";
+import { useCartStore } from "../src/store/useCartStore";
 
 export default function AppRoutes({ handleLogin, handleRegister, navigate }) {
+  const {success}=useAlert();
+  const clearCart=useCartStore((state)=>state.clearCart);
+  const handleCheckout = () => {
+    success("Checkout successful!");
+    // will cleare Cart on Successfull api reponse
+    clearCart();
+    navigate("/home");
+  };
   return (
     <Routes>
       {/* Protected + Layout Routes */}
@@ -26,7 +36,7 @@ export default function AppRoutes({ handleLogin, handleRegister, navigate }) {
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart" element={<CartPage onCheckout={handleCheckout} />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/chatbot" element={<ChatbotPage />} />
         <Route path="/ai-diagnosis" element={<AIDiagnosisPage />} />
