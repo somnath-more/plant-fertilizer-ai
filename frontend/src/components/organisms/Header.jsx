@@ -87,11 +87,10 @@ const Header = ({ user, onNavigate, cartCount, currentPage }) => (
             </div>
           ) : (
             <Button
-              variant="contained"
-              size="sm"
+              variant="outlined"
+              size="small"
               onClick={() => onNavigate("login")}
-              style={{ fontFamily: fontFamily.poppins }}
-              className={`${baseStyles} ${variants.primary} ${sizes.md} w-full mt-4`}
+              className={`font-inter font-semibold !rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 !bg-gradient-to-r from-green-500 to-emerald-600 !text-white hover:from-green-600 hover:to-emerald-700 !px-4 !py-2 !text-sm`}
             >
               <LogIn size={16} />
               Login
