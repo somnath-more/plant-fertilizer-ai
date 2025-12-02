@@ -56,9 +56,8 @@ const BlogPage = () => {
                   </span>
                   <Button
                     size="small"
-                    variant="text"
-                    className={`w-full mt-4 gap-1 flex items-center justify-center !text-green-600 font-semibold !decoration-2 !decoration-green-600 !hover:underline hover:text-green-600`}
-                  >
+                    variant="outlined"
+                    className={`font-inter font-semibold !rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 !border-2 !border-green-500 !text-green-600 hover:bg-green-50 !bg-white !px-4 !py-2 !text-sm`} >
                     Read More <ChevronRight size={16} />
                   </Button>
                 </div>
