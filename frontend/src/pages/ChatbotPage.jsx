@@ -78,7 +78,10 @@ import { Button } from "../components/atoms/Button";
                 placeholder="Ask about fertilizers, plant care, diseases..."
                 className="flex-1 px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 font-inter transition-all duration-200 shadow-sm"
               />
-              <Button onClick={handleSend} disabled={loading || !input.trim()} size="lg">
+              <Button onClick={handleSend} disabled={loading || !input.trim()}
+              variant="outlined"
+              className={`font-inter font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 !shadow-md hover:shadow-xl transform hover:-translate-y-0.5 !bg-gradient-to-r from-green-500 to-emerald-600 !text-white hover:from-green-600 hover:to-emerald-700 !px-8 !py-4 !text-lg !opacity-50 cursor-not-allowed transform-none !border-2`}
+               size="lg">
                 <Send size={20} />
               </Button>
             </div>
