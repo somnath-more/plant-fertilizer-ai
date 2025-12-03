@@ -1,8 +1,7 @@
-import { Badge, BookOpen, ChevronRight } from "lucide-react";
+import { Badge, BookOpen, ChevronRight,PenLine } from "lucide-react";
 import { Button } from "../components/atoms/Button";
 import { useState } from "react";
 import { ARTICLES } from "../utils";
-import { sizes } from "../theme/themeStyles";
 
 const BlogPage = () => {
   const [articles] = useState(ARTICLES);
@@ -10,7 +9,8 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 relative">
+          {/* Header */}
           <div className="inline-flex items-center justify-center gap-3 mb-6 bg-white rounded-2xl px-8 py-4 shadow-lg">
             <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
               <BookOpen className="text-white" size={24} />
@@ -19,6 +19,12 @@ const BlogPage = () => {
               Gardening Blog
             </h2>
           </div>
+
+          {/* Floating Write button */}
+          <Button variant="contained" className="!absolute !right-0 !top-2 !bg-green-600 !text-white !p-3 !rounded-xl !shadow-lg !hover:bg-green-700 transition">
+            <PenLine size={20} />
+          </Button>
+
           <p className="text-xl text-gray-600 font-inter">
             Expert tips, guides, and insights for organic gardening success
           </p>
@@ -57,7 +63,8 @@ const BlogPage = () => {
                   <Button
                     size="small"
                     variant="outlined"
-                    className={`font-inter font-semibold !rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 !border-2 !border-green-500 !text-green-600 hover:bg-green-50 !bg-white !px-4 !py-2 !text-sm`} >
+                    className={`font-inter font-semibold !rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 !border-2 !border-green-500 !text-green-600 hover:bg-green-50 !bg-white !px-4 !py-2 !text-sm`}
+                  >
                     Read More <ChevronRight size={16} />
                   </Button>
                 </div>

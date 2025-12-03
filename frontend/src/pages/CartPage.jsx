@@ -2,14 +2,12 @@ import { CheckCircle, Search, Shield, ShoppingCart } from "lucide-react";
 import { Button } from "../components/atoms/Button";
 import { CartItem } from "../components/molecules/CardItem";
 import { useCartStore } from "../store/useCartStore";
-import { baseStyles, sizes, variants } from "../theme/themeStyles";
-import { fontFamily } from "../theme/customStyles";
+import { sizes } from "../theme/themeStyles";
 
 const CartPage = ({ onCheckout }) => {
   const cart = useCartStore((state) => state.cart);
   //  onRemove
   const onRemove = useCartStore((state) => state.removeFromCart);
-  const onUpdateQuantity = useCartStore((state) => state.updateQuantity);
   const addToCart = useCartStore((state) => state.addToCart);
   const removeFromCart = useCartStore((state) => state.clearCart);
   console.log("cart", cart);

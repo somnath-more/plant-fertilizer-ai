@@ -1,10 +1,17 @@
-import { Award, Shield, Sparkles, TrendingUp } from "lucide-react";
+import {
+  Award,
+  Shield,
+  Sparkles,
+  TrendingUp,
+  PackagePlus,
+  ScanEye,
+  ShoppingBag,
+} from "lucide-react";
 import { useState } from "react";
 import { Button } from "../components/atoms/Button";
 import { FeatureCard } from "../components/molecules/FeatureCard";
 import { ProductCard } from "../components/molecules/ProductCard";
 import { Search } from "@mui/icons-material";
-import { useProductStore } from "../store/useProductStore";
 import { useCartStore } from "../store/useCartStore";
 import Input from "../components/atoms/Input";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +19,17 @@ import { fontFamily } from "../theme/customStyles";
 import { baseStyles, sizes, variants } from "../theme/themeStyles";
 import useFetch from "../hooks/useFetch";
 import { getAllProducts } from "../services/api/productService";
+
 const HomePage = () => {
   const navigate = useNavigate();
   // const products = useProductStore((state) => state.products);
   const addToCart = useCartStore((state) => state.addToCart);
-  const { data: products, loading, error, refetch } = useFetch(getAllProducts, []);
+  const {
+    data: products,
+    loading,
+    error,
+    refetch,
+  } = useFetch(getAllProducts, []);
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredProducts = products?.data?.filter(
@@ -41,29 +54,41 @@ const HomePage = () => {
               Premium organic fertilizers powered by AI recommendations for
               healthier plants and sustainable growth
             </p>
-            <div className="flex gap-4 flex-wrap">
+
+            <div className="flex flex-wrap gap-4 mt-6">
+              {/* AI Diagnosis Button */}
               <Button
-                size="small"
+                size="medium"
                 variant="contained"
                 style={{ fontFamily: fontFamily.poppins }}
-                className={`${baseStyles} ${variants.glass} ${sizes.md}`}
+                className={`
+      ${baseStyles} ${variants.glass} ${sizes.md}
+      flex items-center gap-2 px-6 py-3
+      shadow-md hover:shadow-lg transition rounded-xl
+    `}
                 onClick={() => navigate("/ai-diagnosis")}
               >
-                <Sparkles size={20} />
+                <Sparkles size={20} className="opacity-80" />
                 Try AI Diagnosis
               </Button>
-              {/* want to jump products id onClick */}
+
+              {/* Shop Now Button */}
               <Button
-                size="small"
+                size="medium"
                 variant="contained"
                 style={{ fontFamily: fontFamily.poppins }}
-                className={`${baseStyles} ${variants.glass} ${sizes.md}`}
+                className={`
+      ${baseStyles} ${variants.glass} ${sizes.md}
+      flex items-center gap-2 px-6 py-3
+      shadow-md hover:shadow-lg transition rounded-xl
+    `}
                 onClick={() => {
                   document
                     .getElementById("products")
                     .scrollIntoView({ behavior: "smooth" });
                 }}
               >
+                <ShoppingBag size={20} className="opacity-80" />
                 Shop Now
               </Button>
             </div>
@@ -101,14 +126,17 @@ const HomePage = () => {
 
         <div className="mb-12" id="products">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-4xl font-bold text-gray-900 mb-6 font-poppins">
+            {/* Title */}
+            <h3 className="text-4xl font-bold text-gray-900 font-poppins">
               Premium Products
             </h3>
+
             <Button
               size="small"
               variant="contained"
+              startIcon={<PackagePlus />}
               style={{ fontFamily: fontFamily.poppins }}
-              className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4`}
+              className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition`}
             >
               Add Product
             </Button>
