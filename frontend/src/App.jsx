@@ -45,12 +45,24 @@ export default function App() {
     success(message);
     navigate("/login");
   };
+  const handleForgotPassword = async (email) => {
+    // const { apiResponse, message, status } = await registerUser(formData);
+
+    // if (!status) {
+    //   error(message);
+    //   return;
+    // }
+
+    // success(message);
+    navigate("/verify-otp", { state: { email } });
+  };
 
   return (
     <AppRoutes
       handleLogin={handleLogin}
       handleRegister={handleRegister}
       navigate={navigate}
+      handleForgotPassword={handleForgotPassword}
     />
   );
 }

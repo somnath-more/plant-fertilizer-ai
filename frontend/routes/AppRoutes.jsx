@@ -13,10 +13,17 @@ import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
 import useAlert from "../src/hooks/useAlert";
 import { useCartStore } from "../src/store/useCartStore";
+import ForgotPassword from "../src/pages/ForgotPassword";
+import VerifyOtp from "../src/pages/VerifyOtp/VerifyOtp";
 
-export default function AppRoutes({ handleLogin, handleRegister, navigate }) {
-  const {success}=useAlert();
-  const clearCart=useCartStore((state)=>state.clearCart);
+export default function AppRoutes({
+  handleLogin,
+  handleRegister,
+  navigate,
+  handleForgotPassword,
+}) {
+  const { success } = useAlert();
+  const clearCart = useCartStore((state) => state.clearCart);
   const handleCheckout = () => {
     success("Checkout successful!");
     // will cleare Cart on Successfull api reponse
@@ -36,7 +43,10 @@ export default function AppRoutes({ handleLogin, handleRegister, navigate }) {
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
-        <Route path="/cart" element={<CartPage onCheckout={handleCheckout} />} />
+        <Route
+          path="/cart"
+          element={<CartPage onCheckout={handleCheckout} />}
+        />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/chatbot" element={<ChatbotPage />} />
         <Route path="/ai-diagnosis" element={<AIDiagnosisPage />} />
@@ -49,6 +59,7 @@ export default function AppRoutes({ handleLogin, handleRegister, navigate }) {
           <PublicRoute>
             <LoginPage
               onLogin={handleLogin}
+                 onForgortPasswordClick={() => navigate("/forgot-password")}
               onSignUp={() => navigate("/register")}
             />
           </PublicRoute>
@@ -61,8 +72,29 @@ export default function AppRoutes({ handleLogin, handleRegister, navigate }) {
           <PublicRoute>
             <SignupPage
               onRegister={handleRegister}
+              onForgortPasswordClick={() => navigate("/forgot-password")}
               onLogin={() => navigate("/login")}
             />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <PublicRoute>
+            <ForgotPassword
+              onForgotPassword={handleForgotPassword}
+              onLogin={() => navigate("/login")}
+            />
+          </PublicRoute>
+        }
+      />
+      {/* verify-otp */}
+      <Route
+        path="/verify-otp"
+        element={
+          <PublicRoute>
+            <VerifyOtp />
           </PublicRoute>
         }
       />

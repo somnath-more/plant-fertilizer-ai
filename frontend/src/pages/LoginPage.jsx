@@ -12,7 +12,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { baseStyles, sizes, variants } from "../theme/themeStyles";
 import { fontFamily } from "../theme/customStyles";
 
-const LoginPage = ({ onLogin, onSignUp }) => {
+const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick }) => {
   const { loginWithRedirect } = useAuth0();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -98,12 +98,12 @@ const LoginPage = ({ onLogin, onSignUp }) => {
                 <span className="text-gray-600 font-inter">Remember me</span>
               </label>
 
-              <a
-                href="#"
-                className="text-green-600 font-semibold hover:underline font-inter"
+              <span
+                onClick={onForgortPasswordClick}
+                className="text-green-600 font-semibold hover:underline font-inter cursor-pointer"
               >
                 Forgot password?
-              </a>
+              </span>
             </div>
 
             <Button

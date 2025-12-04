@@ -93,7 +93,7 @@ const Header = ({ user, onNavigate, cartCount, currentPage }) => (
               className={`font-inter font-semibold !rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 !bg-gradient-to-r from-green-500 to-emerald-600 !text-white hover:from-green-600 hover:to-emerald-700 !px-4 !py-2 !text-sm`}
             >
               <LogIn size={16} />
-              Login
+               Login
             </Button>
           )}
         </div>
