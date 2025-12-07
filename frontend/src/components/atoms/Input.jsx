@@ -12,6 +12,7 @@ const Input = ({
   size = "medium",
   helperText,
   error = false,
+  isFocused = false
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -19,6 +20,7 @@ const Input = ({
 
   return (
     <TextField
+       autoFocus={isFocused}
       fullWidth={fullWidth}
       label={label}
       placeholder={placeholder}

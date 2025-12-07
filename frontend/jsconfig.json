@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+     "checkJs": false,         // enables JS type checking
+    "jsx": "react-jsx",       // JSX support
+    "moduleResolution": "node",
+    "target": "ES2020"
+  },
+  "include": ["src"]    
+}

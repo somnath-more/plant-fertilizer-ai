@@ -76,7 +76,8 @@ import { Badge } from "../components/atoms/Badge";
               variant="primary"
               size="lg"
               disabled={loading}
-              className="w-full mb-8"
+               className="flex items-center gap-2 w-full bg-gradient-to-br from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 !text-white py-3 px-6 rounded-2xl shadow-lg transition-colors duration-300"
+
             >
               {loading ? (
                 <>
@@ -85,6 +86,7 @@ import { Badge } from "../components/atoms/Badge";
                 </>
               ) : (
                 <>
+                
                   <Sparkles size={20} />
                   Analyze Plant
                 </>

@@ -30,6 +30,15 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
+            // 🌟 FIX CORS OPTIONS REQUESTS
+            if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
+                exchange.getResponse().setStatusCode(HttpStatus.OK);
+                exchange.getResponse().getHeaders().set("Access-Control-Allow-Origin", "*");
+                exchange.getResponse().getHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                exchange.getResponse().getHeaders().set("Access-Control-Allow-Headers", "*");
+                return exchange.getResponse().setComplete();
+            }
+
             String path = exchange.getRequest().getPath().toString();
 
             // Allow public paths

@@ -19,7 +19,7 @@ import { fontFamily } from "../theme/customStyles";
 import { baseStyles, sizes, variants } from "../theme/themeStyles";
 import useFetch from "../hooks/useFetch";
 import { getAllProducts } from "../services/api/productService";
-
+import CustomLoader from "../components/atoms/CustomLoader";
 const HomePage = () => {
   const navigate = useNavigate();
   // const products = useProductStore((state) => state.products);
@@ -38,7 +38,7 @@ const HomePage = () => {
       p.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
   console.log("products", products?.data);
-  if (loading) return <p>Loading...</p>;
+
   if (error) return <p>Error: {error}</p>;
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
@@ -61,11 +61,10 @@ const HomePage = () => {
                 size="medium"
                 variant="contained"
                 style={{ fontFamily: fontFamily.poppins }}
-                className={`
-      ${baseStyles} ${variants.glass} ${sizes.md}
-      flex items-center gap-2 px-6 py-3
-      shadow-md hover:shadow-lg transition rounded-xl
-    `}
+                className={`${baseStyles} ${variants.glass} ${sizes.md}
+                  flex items-center gap-2 px-6 py-3
+                  shadow-md hover:shadow-lg transition rounded-xl
+                `}
                 onClick={() => navigate("/ai-diagnosis")}
               >
                 <Sparkles size={20} className="opacity-80" />
@@ -151,15 +150,19 @@ const HomePage = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts?.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={() => {
-                addToCart(product);
-              }}
-            />
-          ))}
+          {loading ? (
+            <CustomLoader color="success"/>
+          ) : (
+            filteredProducts?.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={() => {
+                  addToCart(product);
+                }}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

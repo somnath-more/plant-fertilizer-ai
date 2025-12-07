@@ -7,12 +7,8 @@ export const getAllProducts = async () => {
        "Content-Type": "application/json",
      }
     });
-    console.log("res",response);
     
-    
-    
-
-    if (!response.status==200) {
+     if (!response.status==200) {
       const err = await response.data;
       return { data: null, status:false,message:err.message || 'Something went wrong' };
     }

@@ -8,12 +8,10 @@ import LinkedInIcon from "../assets/images/LinkedinIcon.svg";
 import FertilizerLogo from "../assets/images/PlantFertilizerAI.svg";
 import Icon from "../components/atoms/Icon";
 import Input from "../components/atoms/Input";
-import { useAuth0 } from "@auth0/auth0-react";
 import { baseStyles, sizes, variants } from "../theme/themeStyles";
 import { fontFamily } from "../theme/customStyles";
 
-const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick }) => {
-  const { loginWithRedirect } = useAuth0();
+const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick,onGoogleAuthLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [helperText, setHelperText] = useState({ email: "", password: "" });
@@ -36,14 +34,7 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick }) => {
     setLoading(false);
   };
   const handleAuthLogin = (connection) => {
-    if (connection) {
-      console.log(connection);
-      loginWithRedirect({
-        connection: connection,
-      });
-    } else {
-      loginWithRedirect();
-    }
+      onGoogleAuthLogin(connection);
   };
 
   const handleSignUp = (e) => {
@@ -76,6 +67,8 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick }) => {
               label="Email Address"
               size="small"
               type="email"
+              isFocused={true}
+              
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
