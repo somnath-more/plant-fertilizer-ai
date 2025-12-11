@@ -3,10 +3,10 @@ import { Button } from "../components/atoms/Button";
 import { CartItem } from "../components/molecules/CardItem";
 import { useCartStore } from "../store/useCartStore";
 import { sizes } from "../theme/themeStyles";
+import { placeOrder } from "../services/api/order-service/orderService";
 
-const CartPage = ({ onCheckout }) => {
+const CartPage = ({  }) => {
   const cart = useCartStore((state) => state.cart);
-  //  onRemove
   const onRemove = useCartStore((state) => state.removeFromCart);
   const addToCart = useCartStore((state) => state.addToCart);
   const removeFromCart = useCartStore((state) => state.clearCart);
@@ -24,6 +24,14 @@ const CartPage = ({ onCheckout }) => {
   );
   const shipping = subtotal > 500 ? 0 : 50;
   const total = subtotal + shipping;
+
+  const handleCheckout = () => {
+    // Add your checkout logic here
+    // format CustomORderObject
+
+    // const order = {...cart, total, subtotal, shipping, status: "pending"};
+    // placeOrder(cart);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12">

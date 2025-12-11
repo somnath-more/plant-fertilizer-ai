@@ -1,13 +1,4 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import BlogPage from "./pages/BlogPage";
-import HomePage from "./pages/HomePage";
-import ShopPage from "./pages/ShopPage";
-import CartPage from "./pages/CartPage";
-import LoginPage from "./pages/LoginPage";
-import MainLayout from "./layouts/MainLayout";
-import AIDiagnosisPage from "./pages/AIDiagnosisPage";
-import ChatbotPage from "./pages/ChatbotPage";
-import SignupPage from "./pages/SignupPage";
 import { loginUser, registerUser } from "./services/api/authService";
 import useAlert from "./hooks/useAlert";
 import AppRoutes from "../routes/AppRoutes";

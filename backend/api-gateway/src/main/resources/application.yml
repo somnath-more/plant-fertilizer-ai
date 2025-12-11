@@ -30,6 +30,13 @@ spring:
           uri: lb://product-service
           predicates:
             - Path=/api/v1/products/**, /v1/graphql
+        # ============================
+        # ORDER SERVICE
+        # ============================
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/orders/**, /v1/graphql
 
       # ============================
       # GLOBAL CORS CONFIG (REQUIRED)
