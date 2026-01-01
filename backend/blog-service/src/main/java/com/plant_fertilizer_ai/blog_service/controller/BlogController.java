@@ -24,6 +24,10 @@ public class BlogController {
         log.info("get all blogs");
         return ResponseEntity.ok(blogService.getAllPublishedBlogs());
     }
+    @GetMapping("/health")
+    public String health() {
+        return "All is Good";
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Blog> getBlog(@PathVariable Long id) {
