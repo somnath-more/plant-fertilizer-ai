@@ -26,9 +26,9 @@ export default function AppRoutes({
       {/* Protected routes with layout */}
       <Route
         element={
-          <ProtectedRoute>
+          <PublicRoute>
             <MainLayout />
-          </ProtectedRoute>
+          </PublicRoute>
         }
       >
         <Route path="/" element={<HomePage />} />

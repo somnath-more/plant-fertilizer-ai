@@ -13,41 +13,41 @@ export default function App() {
 
   // Manual Login
  const handleLogin = async (formData) => {
-  const { apiResponse, message, status } = await loginUser(formData);
+  // const { apiResponse, message, status } = await loginUser(formData);
 
-  if (!status) {
-    error(message);
-    return;
-  }
+  // if (!status) {
+  //   error(message);
+  //   return;
+  // }
 
-  const userObj = {
-    name: apiResponse.name,
-    email: apiResponse.email,
-    roles: apiResponse.roles,
-    userId: apiResponse.userId,
-    token: apiResponse.token
-  };
+  // const userObj = {
+  //   name: apiResponse.name,
+  //   email: apiResponse.email,
+  //   roles: apiResponse.roles,
+  //   userId: apiResponse.userId,
+  //   token: apiResponse.token
+  // };
 
-  localStorage.setItem("token", apiResponse.token);
-  localStorage.setItem("user", JSON.stringify(userObj));
+  // localStorage.setItem("token", apiResponse.token);
+  // localStorage.setItem("user", JSON.stringify(userObj));
 
-  login(userObj);
+  // login(userObj);
 
-  success(message);
+  // success(message);
   navigate("/home");
 };
 
 
   // Manual Register
   const handleRegister = async (formData) => {
-    const { apiResponse, message, status } = await registerUser(formData);
+    // const { apiResponse, message, status } = await registerUser(formData);
 
-    if (!status) {
-      error(message);
-      return;
-    }
+    // if (!status) {
+    //   error(message);
+    //   return;
+    // }
 
-    success(message);
+    // success(message);
     navigate("/login");
   };
 
