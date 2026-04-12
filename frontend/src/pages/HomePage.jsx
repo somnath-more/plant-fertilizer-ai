@@ -1,13 +1,5 @@
-import {
-  Award,
-  Shield,
-  Sparkles,
-  TrendingUp,
-  PackagePlus,
-  ScanEye,
-  ShoppingBag,
-} from "lucide-react";
-import { useState } from "react";
+import { Award, Shield, Sparkles, TrendingUp, PackagePlus, ScanEye, ShoppingBag } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Button } from "../components/atoms/Button";
 import { FeatureCard } from "../components/molecules/FeatureCard";
 import { ProductCard } from "../components/molecules/ProductCard";
@@ -20,40 +12,54 @@ import { baseStyles, sizes, variants } from "../theme/themeStyles";
 import useFetch from "../hooks/useFetch";
 import { getAllProducts } from "../services/api/productService";
 import CustomLoader from "../components/atoms/CustomLoader";
+import { PRODUCTDATA } from "../utils";
 const HomePage = () => {
   const navigate = useNavigate();
   // const products = useProductStore((state) => state.products);
   const addToCart = useCartStore((state) => state.addToCart);
-  const {
-    data: products,
-    loading,
-    error,
-    refetch,
-  } = useFetch(getAllProducts, []);
+  const { data: products, loading, error, refetch } = useFetch(getAllProducts, []);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(2);
 
-  const filteredProducts = products?.data?.filter(
-    (p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const videos = ["/src/assets/videos/1.mp4", "/src/assets/videos/2.mp4", "/src/assets/videos/3.mp4"];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+    }, 5000); // 5 seconds per video, adjust if needed
+
+    return () => clearInterval(interval);
+  }, [videos.length]);
+
+  // const filteredProducts = products?.data?.filter(
+  //   (p) =>
+  //     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     p.description.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+  const filteredProducts = PRODUCTDATA;
   console.log("products", products?.data);
 
   if (error) return <p>Error: {error}</p>;
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-green-600 to-emerald-600 text-white py-20">
+      <div className="relative overflow-hidden text-white py-20">
+        {/* Video Background */}
+        <video key={currentVideoIndex} className="absolute inset-0 w-full object-cover" autoPlay muted playsInline onEnded={() => setCurrentVideoIndex((prev) => (prev + 1) % videos.length)}>
+          <source src={videos[currentVideoIndex]} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="max-w-3xl">
             <h2 className="text-5xl md:text-6xl font-bold mb-6 font-poppins leading-tight">
               Grow Your Garden <span className="text-green-200">Naturally</span>
             </h2>
-            <p className="text-xl text-green-100 mb-8 font-inter leading-relaxed">
-              Premium organic fertilizers powered by AI recommendations for
-              healthier plants and sustainable growth
-            </p>
+            <p className="text-xl text-green-100 mb-8 font-inter leading-relaxed">Premium organic fertilizers powered by AI recommendations for healthier plants and sustainable growth</p>
 
             <div className="flex flex-wrap gap-4 mt-6">
               {/* AI Diagnosis Button */}
@@ -82,9 +88,7 @@ const HomePage = () => {
       shadow-md hover:shadow-lg transition rounded-xl
     `}
                 onClick={() => {
-                  document
-                    .getElementById("products")
-                    .scrollIntoView({ behavior: "smooth" });
+                  document.getElementById("products").scrollIntoView({ behavior: "smooth" });
                 }}
               >
                 <ShoppingBag size={20} className="opacity-80" />
@@ -106,52 +110,27 @@ const HomePage = () => {
             title="AI-Powered"
             description="Get personalized recommendations using advanced AI technology"
           />
-          <FeatureCard
-            icon={Shield}
-            title="100% Organic"
-            description="Certified organic products for safe and natural gardening"
-          />
-          <FeatureCard
-            icon={TrendingUp}
-            title="Fast Growth"
-            description="Scientifically proven formulas for optimal plant growth"
-          />
-          <FeatureCard
-            icon={Award}
-            title="Expert Support"
-            description="24/7 chatbot assistance from fertilizer experts"
-          />
+          <FeatureCard icon={Shield} title="100% Organic" description="Certified organic products for safe and natural gardening" />
+          <FeatureCard icon={TrendingUp} title="Fast Growth" description="Scientifically proven formulas for optimal plant growth" />
+          <FeatureCard icon={Award} title="Expert Support" description="24/7 chatbot assistance from fertilizer experts" />
         </div>
 
         <div className="mb-12" id="products">
           <div className="flex items-center justify-between mb-4">
             {/* Title */}
-            <h3 className="text-4xl font-bold text-gray-900 font-poppins">
-              Premium Products
-            </h3>
+            <h3 className="text-4xl font-bold text-gray-900 font-poppins">Premium Products</h3>
 
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<PackagePlus />}
-              style={{ fontFamily: fontFamily.poppins }}
-              className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition`}
-            >
+            <Button size="small" variant="contained" startIcon={<PackagePlus />} style={{ fontFamily: fontFamily.poppins }} className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition`}>
               Add Product
             </Button>
           </div>
-          <Input
-            placeholder="Search for organic fertilizers..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            icon={Search}
-          />
+          <Input placeholder="Search for organic fertilizers..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} icon={Search} />
         </div>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
-            <CustomLoader color="success"/>
+            <CustomLoader color="success" />
           ) : (
             filteredProducts?.map((product) => (
               <ProductCard
@@ -163,6 +142,12 @@ const HomePage = () => {
               />
             ))
           )}
+        </div>
+
+        {/* Feedback Section */}
+        <div className="mt-24 text-center">
+          <h3 className="text-3xl font-bold text-gray-900 mb-4 font-poppins">Trusted by Farmers Nationwide</h3>
+          <p className="text-gray-600 max-w-2xl mx-auto mb-8 font-inter">Join thousands of satisfied customers who have transformed their gardens with our premium organic fertilizers and expert AI recommendations.</p>
         </div>
       </div>
     </div>

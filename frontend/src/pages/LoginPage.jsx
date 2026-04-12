@@ -18,7 +18,7 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick,onGoogleAuthLog
   const [loading, setLoading] = useState(false);
   const handleSubmit = (e) => {
     setLoading(true);
-    e.preventDefault();
+    // e.preventDefault();
     let isValid = true;
     if (email === "") {
       setHelperText((prev) => ({ ...prev, email: "Email is required" }));
@@ -28,9 +28,9 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick,onGoogleAuthLog
       setHelperText((prev) => ({ ...prev, password: "Password is required" }));
       isValid = false;
     }
-    if (isValid) {
+    // if (isValid) {
       onLogin({  email,password });
-    }
+    // }
     setLoading(false);
   };
   const handleAuthLogin = (connection) => {
@@ -60,7 +60,7 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick,onGoogleAuthLog
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <div  className="space-y-3">
             <Input
               helperText={helperText.email}
               error={helperText.email !== ""}
@@ -102,8 +102,9 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick,onGoogleAuthLog
             <Button
               type="submit"
               size="small"
-              loading={loading}
-              disabled={loading}
+              onClick={()=>handleSubmit()}
+              // loading={loading}
+              // disabled={loading}
               variant="contained"
               style={{ fontFamily: fontFamily.poppins }}
               className={`${baseStyles} ${variants.primary} ${sizes.md} w-full mt-4`}
@@ -141,7 +142,7 @@ const LoginPage = ({ onLogin, onSignUp,   onForgortPasswordClick,onGoogleAuthLog
                 />
               </div>
             </div>
-          </form>
+          </div>
 
           <div className="mt-6 text-center text-sm">
             <p className="text-gray-600 font-inter">
