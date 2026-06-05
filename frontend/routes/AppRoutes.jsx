@@ -14,21 +14,15 @@ import SignupPage from "../src/pages/SignupPage";
 import ForgotPassword from "../src/pages/ForgotPassword";
 import VerifyOtp from "../src/pages/VerifyOtp/VerifyOtp";
 
-export default function AppRoutes({
-  handleLogin,
-  handleRegister,
-  navigate,
-  handleForgotPassword,
-  handleGoogleAuthLogin,
-}) {
+export default function AppRoutes() {
   return (
     <Routes>
       {/* Protected routes with layout */}
       <Route
         element={
-          <PublicRoute>
+          <ProtectedRoute>
             <MainLayout />
-          </PublicRoute>
+          </ProtectedRoute>
         }
       >
         <Route path="/" element={<HomePage />} />
@@ -45,12 +39,7 @@ export default function AppRoutes({
         path="/login"
         element={
           <PublicRoute>
-            <LoginPage
-              onLogin={handleLogin}
-              onSignUp={() => navigate("/register")}
-              onForgortPasswordClick={() => navigate("/forgot-password")}
-              onGoogleAuthLogin={handleGoogleAuthLogin}
-            />
+            <LoginPage />
           </PublicRoute>
         }
       />
@@ -59,11 +48,7 @@ export default function AppRoutes({
         path="/register"
         element={
           <PublicRoute>
-            <SignupPage
-              onRegister={handleRegister}
-              onLogin={() => navigate("/login")}
-              onGoogleAuthLogin={handleGoogleAuthLogin}
-            />
+            <SignupPage />
           </PublicRoute>
         }
       />
@@ -72,10 +57,7 @@ export default function AppRoutes({
         path="/forgot-password"
         element={
           <PublicRoute>
-            <ForgotPassword
-              onForgotPassword={handleForgotPassword}
-              onLogin={() => navigate("/login")}
-            />
+            <ForgotPassword />
           </PublicRoute>
         }
       />

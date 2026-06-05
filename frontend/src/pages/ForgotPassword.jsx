@@ -1,23 +1,23 @@
-import { useNavigate } from 'react-router-dom';
 import React from "react";
 import { Mail, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { fontFamily } from "../theme/customStyles";
-import { baseStyles, sizes, variants } from "../theme/themeStyles";
+import { authStyles, baseStyles, sizes, variants } from "../theme/themeStyles";
 import Input from '../components/atoms/Input';
 import { Button } from '../components/atoms/Button';
 
-const ForgotPassword = ({onForgotPassword}) => {
+const ForgotPassword = () => {
     const navigate = useNavigate();
     const [email, setEmail] = React.useState("");
 
     const handleForgotPassword = (e) => {
         e.preventDefault();
-        onForgotPassword(email);
+        navigate("/verify-otp", { state: { email } });
     };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-6 flex items-center justify-center">
-      <div className="max-w-[400px] w-full mx-auto px-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+    <div className={authStyles.page}>
+      <div className={authStyles.container}>
+        <div className={authStyles.card}>
 
           {/* Logo */}
           <div className="text-center mb-6">
@@ -61,7 +61,7 @@ const ForgotPassword = ({onForgotPassword}) => {
             <p className="text-gray-600 font-inter">
               Remember your password?{" "}
               <span
-                onClick={() => navigate("/sign-in")}
+                onClick={() => navigate("/login")}
                 className="text-green-600 font-bold hover:underline cursor-pointer"
               >
                 Sign in

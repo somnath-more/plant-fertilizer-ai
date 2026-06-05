@@ -36,6 +36,7 @@ export const loginUser = async (user) => {
       body: JSON.stringify(user),
     });
     
+    alert("Req")
 
     if (!response.ok) {
       const err = await response.json();

@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import muiTheme from "./theme/muiTheme";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,7 +18,10 @@ createRoot(document.getElementById("root")).render(
 
         }}
       >
-        <App />
+        <ThemeProvider theme={muiTheme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
       </Auth0Provider>
     </BrowserRouter>
   </StrictMode>

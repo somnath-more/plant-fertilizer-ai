@@ -31,13 +31,12 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, [videos.length]);
 
-  // const filteredProducts = products?.data?.filter(
-  //   (p) =>
-  //     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     p.description.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-  const filteredProducts = PRODUCTDATA;
-  console.log("products", products?.data);
+  const filteredProducts = products?.data?.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  // const filteredProducts = PRODUCTDATA;
 
   if (error) return <p>Error: {error}</p>;
   return (
