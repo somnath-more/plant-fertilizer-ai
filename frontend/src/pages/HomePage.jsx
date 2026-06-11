@@ -1,4 +1,4 @@
-import { Award, Shield, Sparkles, TrendingUp, PackagePlus, ScanEye, ShoppingBag } from "lucide-react";
+import { Award, Shield, Sparkles, TrendingUp, PackagePlus, ShoppingBag } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "../components/atoms/Button";
 import { FeatureCard } from "../components/molecules/FeatureCard";
@@ -12,14 +12,14 @@ import { baseStyles, sizes, variants } from "../theme/themeStyles";
 import useFetch from "../hooks/useFetch";
 import { getAllProducts } from "../services/api/productService";
 import CustomLoader from "../components/atoms/CustomLoader";
-import { PRODUCTDATA } from "../utils";
+import AddProduct from "../components/organisms/AddProduct";
 const HomePage = () => {
   const navigate = useNavigate();
-  // const products = useProductStore((state) => state.products);
   const addToCart = useCartStore((state) => state.addToCart);
   const { data: products, loading, error, refetch } = useFetch(getAllProducts, []);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(2);
+  const [isAddProductOpen, setIsAddProductOpen] = useState(false);
 
   const videos = ["/src/assets/videos/1.mp4", "/src/assets/videos/2.mp4", "/src/assets/videos/3.mp4"];
 
@@ -31,14 +31,14 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, [videos.length]);
 
-  const filteredProducts = products?.data?.filter(
+  const filteredProducts = products?.filter(
     (p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
   // const filteredProducts = PRODUCTDATA;
 
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p>Error: {error?.message}</p>;
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
@@ -119,7 +119,14 @@ const HomePage = () => {
             {/* Title */}
             <h3 className="text-4xl font-bold text-gray-900 font-poppins">Premium Products</h3>
 
-            <Button size="small" variant="contained" startIcon={<PackagePlus />} style={{ fontFamily: fontFamily.poppins }} className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition`}>
+            <Button
+              size="small"
+              variant="contained"
+              startIcon={<PackagePlus />}
+              style={{ fontFamily: fontFamily.poppins }}
+              className={`${baseStyles} ${variants.primary} ${sizes.md} mt-4 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition`}
+              onClick={() => setIsAddProductOpen(true)}
+            >
               Add Product
             </Button>
           </div>
@@ -149,6 +156,12 @@ const HomePage = () => {
           <p className="text-gray-600 max-w-2xl mx-auto mb-8 font-inter">Join thousands of satisfied customers who have transformed their gardens with our premium organic fertilizers and expert AI recommendations.</p>
         </div>
       </div>
+
+      <AddProduct
+        open={isAddProductOpen}
+        onClose={() => setIsAddProductOpen(false)}
+        onProductAdded={refetch}
+      />
     </div>
   );
 };

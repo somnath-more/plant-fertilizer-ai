@@ -1,5 +1,6 @@
 package com.plant_fertilizer_ai.order_service.service.Imple;
 
+import com.plant_fertilizer_ai.order_service.constants.Messages;
 import com.plant_fertilizer_ai.order_service.dto.CreateOrderRequest;
 import com.plant_fertilizer_ai.order_service.enums.OrderStatus;
 import com.plant_fertilizer_ai.order_service.exception.CustomException;
@@ -104,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderById(orderId);
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
-        return ORDER_CANCELLED_SUCCESS;
+        return Messages.ORDER_CANCELLED_SUCCESSFULLY;
     }
 
 

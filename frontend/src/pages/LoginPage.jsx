@@ -42,7 +42,7 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const { apiResponse, message, status } = await loginUser(values);
+      const { status, message, data } = await loginUser(values);
 
       if (!status) {
         error(message);
@@ -50,14 +50,14 @@ const LoginPage = () => {
       }
 
       const userObj = {
-        name: apiResponse.name,
-        email: apiResponse.email,
-        roles: apiResponse.roles,
-        userId: apiResponse.userId,
-        token: apiResponse.token,
+        name: data.name,
+        email: data.email,
+        roles: data.roles,
+        userId: data.userId,
+        token: data.token,
       };
 
-      localStorage.setItem("token", apiResponse.token);
+      localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(userObj));
 
       login(userObj);

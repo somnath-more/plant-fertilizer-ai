@@ -13,6 +13,7 @@ import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
 import ForgotPassword from "../src/pages/ForgotPassword";
 import VerifyOtp from "../src/pages/VerifyOtp/VerifyOtp";
+import NotFound from "../src/pages/NotFound";
 
 export default function AppRoutes() {
   return (
@@ -71,7 +72,7 @@ export default function AppRoutes() {
         }
       />
 
-      <Route path="*" element={<div>404 Not Found</div>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

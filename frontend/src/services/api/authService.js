@@ -1,52 +1,45 @@
-// REGISTER USER
+import apiClient from './apiClient';
 
-// services/auth.service.js
-
+/**
+ * Register a new user
+ * @param {Object} user - User registration data
+ * @returns {Promise<{status: boolean, message: string, data: any}>}
+ */
 export const registerUser = async (user) => {
   try {
-    const response = await fetch("http://localhost:8080/api/v1/auth/register", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      return { data: null, status: false, message: err.message || "Something went wrong" };
-    }
-
-    const apiResponse = await response.json();
-    return { apiResponse, status: true, message: apiResponse.message };
-
-  } catch (err) {
-    return { apiResponse: null, status: false, message: err.message || "Something went wrong" };
+    const response = await apiClient.post('/auth/register', user);
+    return {
+      status: response.status,
+      message: response.message,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message || 'Registration failed',
+      data: null,
+    };
   }
 };
 
+/**
+ * Login user
+ * @param {Object} user - User login credentials
+ * @returns {Promise<{status: boolean, message: string, data: any}>}
+ */
 export const loginUser = async (user) => {
   try {
-    const response = await fetch("http://localhost:8080/api/v1/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-    
-    alert("Req")
-
-    if (!response.ok) {
-      const err = await response.json();
-      return { data: null, status:false,message:err.message || 'Something went wrong' };
-    }
-
-    const apiResponse = await response.json();
-    return { apiResponse, status:true,message: apiResponse.message };
-
-  } catch (err) {
-    return { apiResponse: null, status:false, message: err.message || "Something went wrong" };
+    const response = await apiClient.post('/auth/login', user);
+    return {
+      status: response.status,
+      message: response.message,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message || 'Login failed',
+      data: null,
+    };
   }
 };

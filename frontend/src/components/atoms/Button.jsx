@@ -2,6 +2,7 @@ import { Button as MuiButton } from "@mui/material";
 
 export const Button = ({
   type,
+  form,
   loading,
   children,
   onClick,
@@ -17,6 +18,7 @@ export const Button = ({
   return (
     <MuiButton
       type={type}
+      form={form}
       onClick={onClick}
       disabled={disabled}
       size={size}

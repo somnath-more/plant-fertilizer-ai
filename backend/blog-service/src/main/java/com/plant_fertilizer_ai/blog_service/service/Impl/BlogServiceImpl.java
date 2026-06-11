@@ -1,5 +1,6 @@
 package com.plant_fertilizer_ai.blog_service.service.Impl;
 
+import com.plant_fertilizer_ai.blog_service.constants.Messages;
 import com.plant_fertilizer_ai.blog_service.exception.CustomException;
 import com.plant_fertilizer_ai.blog_service.model.Blog;
 import com.plant_fertilizer_ai.blog_service.repository.BlogRepository;
@@ -24,7 +25,7 @@ public class BlogServiceImpl implements BlogService {
     }
     public Blog getBlogById(Long id) {
         return blogRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Blog not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(Messages.BLOG_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     @Override

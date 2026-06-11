@@ -2,7 +2,7 @@
 package com.plant_fetlilizer_ai.product_service.controller;
 
 
-import com.plant_fetlilizer_ai.product_service.dto.ProductRequestDto;
+import com.plant_fetlilizer_ai.product_service.dto.ProductRequest;
 import com.plant_fetlilizer_ai.product_service.dto.ProductResponseDto;
 import com.plant_fetlilizer_ai.product_service.model.Product;
 import com.plant_fetlilizer_ai.product_service.service.ProductService;
@@ -50,13 +50,14 @@ public class ProductGraphQLController {
         @Argument Integer stock,
         @Argument String category
     ) {
-        ProductRequestDto productRequestDto = new ProductRequestDto();
+        ProductRequest productRequestDto = new ProductRequest();
         productRequestDto.setName(name);
         productRequestDto.setDescription(description);
         productRequestDto.setPrice(price);
         productRequestDto.setStock(stock);
         productRequestDto.setCategory(category);
-        return productService.createProduct(productRequestDto);
+
+        return productService.addProduct(productRequestDto,null);
     }
     
     @MutationMapping

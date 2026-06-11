@@ -3,7 +3,7 @@ import { Button } from "../components/atoms/Button";
 import { CartItem } from "../components/molecules/CardItem";
 import { useCartStore } from "../store/useCartStore";
 import { sizes } from "../theme/themeStyles";
-import { placeOrder } from "../services/api/order-service/orderService";
+import { placeOrder } from "../services/api/orderService";
 
 const CartPage = ({  }) => {
   const cart = useCartStore((state) => state.cart);

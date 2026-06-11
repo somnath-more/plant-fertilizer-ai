@@ -1,6 +1,6 @@
 package com.plant_fetlilizer_ai.product_service.config;
 
-import com.plant_fetlilizer_ai.product_service.dto.ProductRequestDto;
+import com.plant_fetlilizer_ai.product_service.dto.ProductRequest;
 import com.plant_fetlilizer_ai.product_service.dto.ProductResponseDto;
 import com.plant_fetlilizer_ai.product_service.model.Product;
 import org.modelmapper.ModelMapper;
@@ -16,7 +16,7 @@ public class ProductMapper {
     }
 
     // Request DTO → Entity
-    public Product toEntity(ProductRequestDto dto) {
+    public Product toEntity(ProductRequest dto) {
         return mapper.map(dto, Product.class);
     }
 

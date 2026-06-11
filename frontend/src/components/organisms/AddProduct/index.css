@@ -1,0 +1,84 @@
+.add-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.add-product-switches {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.add-product-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #047857;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.875rem;
+}
+
+.upload-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 9999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid #c7d2fe;
+}
+
+.upload-caption {
+  color: #6b7280;
+  font-size: .75rem;
+}
+
+.preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.image-preview {
+  border-radius: 12px;
+  object-fit: cover;
+  width: 160px;
+  height: 120px;
+  border: 1px solid #e5e7eb;
+}
+
+@media (max-width: 640px) {
+  .add-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-product-badge {
+    width: 100%;
+    margin-left: 0;
+  }
+}

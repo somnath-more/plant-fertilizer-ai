@@ -4,9 +4,11 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 @Data
-public class ProductRequestDto {
+public class ProductRequest {
 
     @NotBlank(message = "Product name is required")
     private String name;
@@ -31,4 +33,6 @@ public class ProductRequestDto {
 
     private Boolean organic = true;
     private Boolean featured = false;
+    private List<Map<String, Object>> imageMeta;
+    private List<String> imageUrls;
 }
