@@ -24,8 +24,11 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
+    @Override
     @Transactional
-    public Order createOrder(CreateOrderRequest request) {
+    public Order placeOrder(CreateOrderRequest request) {
+        validateOrderRequest(request);
+
         Order order = new Order();
         order.setUserId(request.getUserId());
         order.setShippingAddress(request.getShippingAddress());
@@ -62,6 +65,33 @@ public class OrderServiceImpl implements OrderService {
         order.setTotal(subtotal.add(shipping));
 
         return orderRepository.save(order);
+    }
+
+    private void validateOrderRequest(CreateOrderRequest request) {
+        if (request == null || request.getUserId() == null) {
+            throw new CustomException("User is required to place an order", HttpStatus.BAD_REQUEST);
+        }
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new CustomException("Order must contain at least one item", HttpStatus.BAD_REQUEST);
+        }
+        if (request.getShippingAddress() == null || request.getShippingAddress().isBlank()) {
+            throw new CustomException("Shipping address is required", HttpStatus.BAD_REQUEST);
+        }
+        if (request.getPaymentMethod() == null || request.getPaymentMethod().isBlank()) {
+            throw new CustomException("Payment method is required", HttpStatus.BAD_REQUEST);
+        }
+
+        request.getItems().forEach(item -> {
+            if (item.getProductId() == null || item.getProductName() == null || item.getProductName().isBlank()) {
+                throw new CustomException("Each order item must contain a product", HttpStatus.BAD_REQUEST);
+            }
+            if (item.getQuantity() == null || item.getQuantity() <= 0) {
+                throw new CustomException("Item quantity must be greater than zero", HttpStatus.BAD_REQUEST);
+            }
+            if (item.getPrice() == null || item.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new CustomException("Item price must be greater than zero", HttpStatus.BAD_REQUEST);
+            }
+        });
     }
 
     public List<Order> getUserOrders(Long userId) {

@@ -115,7 +115,7 @@ const AddProduct = ({ open, onClose, onProductAdded, modalSx }) => {
         formData.append('productRequest', JSON.stringify(payload));
 
         imageFiles.forEach((file) => {
-          formData.append('file', file);
+          formData.append('files', file);
         });
       
 

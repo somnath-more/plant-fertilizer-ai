@@ -29,12 +29,13 @@ export const getAllProducts = async () => {
 export const ADD_PRODUCT = async (productData) => {
   try {
     const isFormData = typeof FormData !== 'undefined' && productData instanceof FormData;
-    
-    let config = {};
-    if (isFormData) {
-      // For FormData, let axios set the multipart boundary
-      config.headers = {};
-    }
+
+    // apiClient has application/json as its default Content-Type. Explicitly
+    // unset it for FormData so Axios/the browser can add multipart/form-data
+    // together with the required boundary.
+    const config = isFormData
+      ? { headers: { 'Content-Type': undefined } }
+      : {};
 
     const response = await apiClient.post('/products', productData, config);
     return {

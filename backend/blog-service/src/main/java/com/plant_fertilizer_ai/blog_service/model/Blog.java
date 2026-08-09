@@ -46,6 +46,8 @@ public class Blog {
 
     private Integer views = 0;
 
+    private Integer likes = 0;
+
     private LocalDateTime publishedAt;
 
     private LocalDateTime createdAt = LocalDateTime.now();

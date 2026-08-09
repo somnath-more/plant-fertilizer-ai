@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface OrderService {
-    Order createOrder(CreateOrderRequest request);
+    Order placeOrder(CreateOrderRequest request);
     List<Order> getUserOrders(Long userId);
     Order getOrderById(Long orderId);
     Order getOrderByNumber(String orderNumber);

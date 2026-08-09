@@ -1,24 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BookmarkPlus,
   BookOpen,
-  MessageCircle,
+  Eye,
+  Heart,
   PenLine,
   Search,
   Sparkles,
-  ThumbsUp,
 } from "lucide-react";
+import { Alert, CircularProgress } from "@mui/material";
 import { Button } from "../components/atoms/Button";
 import { Badge } from "../components/atoms/Badge";
 import CreateBlog from "../components/organisms/CreateBlog";
-import { ARTICLES } from "../utils";
+import {
+  getAllBlogs,
+  getStaffPicks,
+  likeBlog,
+} from "../services/api/blogService";
 import { baseStyles, sizes, variants } from "../theme/themeStyles";
-
-const staffPicks = [
-  "How compost tea changes root biology",
-  "The simple watering rhythm most gardens need",
-  "Why leaf color is your first soil test",
-];
 
 const recommendedTopics = [
   "Soil Health",
@@ -29,7 +28,16 @@ const recommendedTopics = [
   "Plant Nutrition",
 ];
 
-const BlogArticleRow = ({ article }) => (
+const formatPublishedDate = (date) => {
+  if (!date) return "Just now";
+  return new Intl.DateTimeFormat("en", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(date));
+};
+
+const BlogArticleRow = ({ article, onLike }) => (
   <article className="grid grid-cols-[1fr_160px] gap-7 border-b border-gray-200 py-9 first:pt-0 max-sm:grid-cols-1">
     <div className="min-w-0">
       <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-gray-600 font-inter">
@@ -37,8 +45,8 @@ const BlogArticleRow = ({ article }) => (
           <BookOpen size={15} />
         </span>
         <span>In OrganicFert</span>
-        <span>by Garden Team</span>
-        <span>{article.date}</span>
+        <span>by {article.author || "Garden Team"}</span>
+        <span>{formatPublishedDate(article.publishedAt || article.createdAt)}</span>
       </div>
 
       <h3 className="mb-2 font-poppins text-2xl font-extrabold leading-tight text-gray-950 transition-colors hover:text-green-700">
@@ -50,13 +58,18 @@ const BlogArticleRow = ({ article }) => (
 
       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
         <Badge variant="success">{article.category}</Badge>
-        <span>{article.readTime}</span>
+        <span>{article.readTime || "1 min read"}</span>
         <span className="inline-flex items-center gap-1">
-          <ThumbsUp size={15} /> 2K
+          <Eye size={15} /> {article.views || 0}
         </span>
-        <span className="inline-flex items-center gap-1">
-          <MessageCircle size={15} /> 45
-        </span>
+        <button
+          type="button"
+          onClick={() => onLike(article.id)}
+          className="inline-flex items-center gap-1 transition hover:text-rose-600"
+          aria-label={`Like ${article.title}`}
+        >
+          <Heart size={15} /> {article.likes || 0}
+        </button>
         <button className="ml-auto rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-green-700">
           <BookmarkPlus size={19} />
         </button>
@@ -64,31 +77,76 @@ const BlogArticleRow = ({ article }) => (
     </div>
 
     <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded bg-gradient-to-br from-green-100 via-lime-50 to-cyan-100 max-sm:w-full">
-      <BookOpen size={52} className="text-green-700" />
+      {article.imageUrl ? (
+        <img src={article.imageUrl} alt="" className="h-full w-full object-cover" />
+      ) : (
+        <BookOpen size={52} className="text-green-700" />
+      )}
     </div>
   </article>
 );
 
-const BlogSidebar = () => (
+const BlogSidebar = ({ selectedCategory, onCategoryChange, rankingsRefresh }) => {
+  const [ranking, setRanking] = useState("views");
+  const [staffPicks, setStaffPicks] = useState([]);
+  const [picksLoading, setPicksLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    const loadStaffPicks = async () => {
+      setPicksLoading(true);
+      const response = await getStaffPicks(ranking, 3);
+      if (!active) return;
+      setStaffPicks(response.status && Array.isArray(response.data) ? response.data : []);
+      setPicksLoading(false);
+    };
+    loadStaffPicks();
+    return () => {
+      active = false;
+    };
+  }, [ranking, rankingsRefresh]);
+
+  return (
   <aside className="sticky top-32 hidden h-fit border-l border-gray-200 pl-9 lg:block">
     <section className="mb-11">
       <h3 className="mb-6 font-poppins text-base font-extrabold text-gray-950">
         Staff Picks
       </h3>
+      <div className="mb-6 flex gap-2">
+        {[
+          ["views", "Most read"],
+          ["likes", "Most liked"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setRanking(value)}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              ranking === value ? "bg-green-700 text-white" : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       <div className="space-y-6">
-        {staffPicks.map((pick, index) => (
-          <article key={pick}>
-            <p className="mb-2 text-sm text-gray-600">Garden Team</p>
+        {picksLoading && <p className="text-sm text-gray-500">Loading picks...</p>}
+        {!picksLoading && staffPicks.length === 0 && (
+          <p className="text-sm text-gray-500">No ranked blogs yet.</p>
+        )}
+        {!picksLoading && staffPicks.map((pick) => (
+          <article key={pick.id}>
+            <p className="mb-2 text-sm text-gray-600">{pick.author || "Garden Team"}</p>
             <h4 className="font-poppins text-base font-extrabold leading-snug text-gray-950">
-              {pick}
+              {pick.title}
             </h4>
-            <p className="mt-2 text-sm text-gray-500">{index + 2}d ago</p>
+            <p className="mt-2 flex items-center gap-3 text-sm text-gray-500">
+              <span className="inline-flex items-center gap-1"><Eye size={14} /> {pick.views || 0}</span>
+              <span className="inline-flex items-center gap-1"><Heart size={14} /> {pick.likes || 0}</span>
+            </p>
           </article>
         ))}
       </div>
-      <button className="mt-6 font-inter text-sm font-semibold text-green-700">
-        See the full list
-      </button>
     </section>
 
     <section className="mb-11">
@@ -99,7 +157,13 @@ const BlogSidebar = () => (
         {recommendedTopics.map((topic) => (
           <button
             key={topic}
-            className="rounded-full bg-gray-100 px-4 py-2 font-inter text-sm font-semibold text-gray-700 transition hover:bg-green-100 hover:text-green-800"
+            type="button"
+            onClick={() => onCategoryChange(topic)}
+            className={`rounded-full px-4 py-2 font-inter text-sm font-semibold transition ${
+              selectedCategory === topic
+                ? "bg-green-700 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-800"
+            }`}
           >
             {topic}
           </button>
@@ -133,17 +197,74 @@ const BlogSidebar = () => (
       </div>
     </section>
   </aside>
-);
+  );
+};
 
 const BlogPage = () => {
-  const [articles] = useState(ARTICLES);
+  const [articles, setArticles] = useState([]);
   const [isWriting, setIsWriting] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [availableCategories, setAvailableCategories] = useState(recommendedTopics);
+  const [loading, setLoading] = useState(true);
+  const [feedError, setFeedError] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadBlogs = async () => {
+      setLoading(true);
+      setFeedError("");
+      const response = await getAllBlogs(selectedCategory);
+
+      if (!active) return;
+      if (response.status) {
+        const blogs = Array.isArray(response.data) ? response.data : [];
+        setArticles(blogs);
+        if (selectedCategory === "All") {
+          setAvailableCategories((current) => [
+            ...new Set([
+              ...current,
+              ...blogs.map((blog) => blog.category).filter(Boolean),
+            ]),
+          ]);
+        }
+      } else {
+        setArticles([]);
+        setFeedError(response.message);
+      }
+      setLoading(false);
+    };
+
+    loadBlogs();
+    return () => {
+      active = false;
+    };
+  }, [selectedCategory, refreshKey]);
+
+  const handlePublished = () => {
+    setIsWriting(false);
+    setSelectedCategory("All");
+    setRefreshKey((value) => value + 1);
+  };
+
+  const handleLike = async (blogId) => {
+    const response = await likeBlog(blogId);
+    if (!response.status) {
+      setFeedError(response.message);
+      return;
+    }
+    setArticles((current) => current.map((article) =>
+      article.id === blogId ? response.data : article
+    ));
+    setRefreshKey((value) => value + 1);
+  };
 
   if (isWriting) {
     return (
       <CreateBlog
         onCancel={() => setIsWriting(false)}
-        onPublished={() => setIsWriting(false)}
+        onPublished={handlePublished}
       />
     );
   }
@@ -181,19 +302,48 @@ const BlogPage = () => {
             <button className="border-b border-gray-950 pb-4 font-semibold text-gray-950">
               For you
             </button>
-            <button className="pb-4 font-semibold text-gray-500 transition hover:text-gray-950">
-              Featured
-            </button>
+          </div>
+
+          <div className="mb-8 flex flex-wrap gap-3">
+            {["All", ...availableCategories].map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setSelectedCategory(category)}
+                className={`rounded-full px-4 py-2 font-inter text-sm font-semibold transition ${
+                  selectedCategory === category
+                    ? "bg-green-700 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-800"
+                }`}
+              >
+                {category === "All" ? "All latest" : category}
+              </button>
+            ))}
           </div>
 
           <div>
-            {articles.map((article) => (
-              <BlogArticleRow key={article.id} article={article} />
+            {loading && (
+              <div className="flex justify-center py-16">
+                <CircularProgress color="success" />
+              </div>
+            )}
+            {!loading && feedError && <Alert severity="error">{feedError}</Alert>}
+            {!loading && !feedError && articles.length === 0 && (
+              <p className="py-16 text-center font-inter text-gray-500">
+                No published blogs found in this category.
+              </p>
+            )}
+            {!loading && !feedError && articles.map((article) => (
+              <BlogArticleRow key={article.id} article={article} onLike={handleLike} />
             ))}
           </div>
         </main>
 
-        <BlogSidebar />
+        <BlogSidebar
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          rankingsRefresh={refreshKey}
+        />
       </div>
     </div>
   );

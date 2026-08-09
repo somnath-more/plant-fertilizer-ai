@@ -31,6 +31,9 @@ public class BlogDto {
     )
     private String imageUrl;
 
+    @Size(max = 50, message = "Read time cannot exceed 50 characters")
+    private String readTime;
+
     @NotNull(message = "Published status must be specified")
     private Boolean published = false;
 

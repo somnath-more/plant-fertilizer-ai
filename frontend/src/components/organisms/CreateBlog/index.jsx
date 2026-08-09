@@ -68,8 +68,8 @@ export default function CreateBlog({ onCancel, onPublished }) {
   const handleSaveBlog = async () => {
     if (!ejInstance.current || submitting) return;
 
-    if (!title.trim()) {
-      setFormError("Blog title is required.");
+    if (title.trim().length < 5) {
+      setFormError("Blog title must contain at least 5 characters.");
       return;
     }
 
@@ -78,15 +78,34 @@ export default function CreateBlog({ onCancel, onPublished }) {
       setFormError("");
 
       const savedBlocksData = await ejInstance.current.save();
+      if (!savedBlocksData.blocks.length) {
+        setFormError("Blog content is required.");
+        return;
+      }
+
+      const content = JSON.stringify(savedBlocksData);
+      if (content.length < 100) {
+        setFormError("Blog content must contain at least 100 characters.");
+        return;
+      }
+      const wordCount = savedBlocksData.blocks.reduce((total, block) => {
+        const text = block?.data?.text || block?.data?.caption || "";
+        return total + text.replace(/<[^>]*>/g, " ").trim().split(/\s+/).filter(Boolean).length;
+      }, 0);
+      const blogTags = tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+
       const blogPayload = {
         title: title.trim(),
-        subtitle: subtitle.trim(),
-        coverImage: coverImage.trim(),
-        tags: tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter(Boolean),
-        content: JSON.stringify(savedBlocksData),
+        excerpt: subtitle.trim(),
+        content,
+        category: blogTags[0] || "General",
+        author: "Garden Team",
+        imageUrl: coverImage.trim() || null,
+        readTime: `${Math.max(1, Math.ceil(wordCount / 200))} min read`,
+        published: true,
       };
 
       const response = await ADD_BLOG(blogPayload);

@@ -1,21 +1,32 @@
-import { CheckCircle, Search, Shield, ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import { Alert, MenuItem, TextField } from "@mui/material";
+import { CheckCircle, Shield, ShoppingCart } from "lucide-react";
 import { Button } from "../components/atoms/Button";
 import { CartItem } from "../components/molecules/CardItem";
 import { useCartStore } from "../store/useCartStore";
 import { sizes } from "../theme/themeStyles";
-import { placeOrder } from "../services/api/orderService";
+import { useUserStore } from "../store/useUserStore";
 
-const CartPage = ({  }) => {
+const CartPage = () => {
   const cart = useCartStore((state) => state.cart);
   const onRemove = useCartStore((state) => state.removeFromCart);
   const addToCart = useCartStore((state) => state.addToCart);
-  const removeFromCart = useCartStore((state) => state.clearCart);
-  console.log("cart", cart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const submitOrder = useCartStore((state) => state.placeOrder);
+  const placingOrder = useCartStore((state) => state.placingOrder);
+  const orderError = useCartStore((state) => state.orderError);
+  const user = useUserStore((state) => state.user);
+  const [shippingAddress, setShippingAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("CASH_ON_DELIVERY");
+  const [checkoutMessage, setCheckoutMessage] = useState("");
+
   const handleUpdateQuantity = (item, quantityChange) => {
     if (quantityChange > 0) {
       addToCart(item);
+    } else if (item.quantity <= 1) {
+      onRemove(item.id);
     } else {
-      removeFromCart(item.id);
+      updateQuantity(item.id, item.quantity - 1);
     }
   };
   const subtotal = cart.reduce(
@@ -25,12 +36,36 @@ const CartPage = ({  }) => {
   const shipping = subtotal > 500 ? 0 : 50;
   const total = subtotal + shipping;
 
-  const handleCheckout = () => {
-    // Add your checkout logic here
-    // format CustomORderObject
+  const handleCheckout = async () => {
+    setCheckoutMessage("");
+    let storedUser = user;
+    if (!storedUser) {
+      try {
+        storedUser = JSON.parse(localStorage.getItem("user") || "null");
+      } catch {
+        storedUser = null;
+      }
+    }
+    if (!storedUser?.userId) {
+      setCheckoutMessage("Please sign in before placing your order.");
+      return;
+    }
+    if (!shippingAddress.trim()) {
+      setCheckoutMessage("Please enter a shipping address.");
+      return;
+    }
 
-    // const order = {...cart, total, subtotal, shipping, status: "pending"};
-    // placeOrder(cart);
+    const response = await submitOrder({
+      userId: storedUser.userId,
+      shippingAddress,
+      billingAddress: shippingAddress,
+      paymentMethod,
+    });
+    if (response.status) {
+      setCheckoutMessage(`Order ${response.data.orderNumber} placed successfully.`);
+    } else {
+      setCheckoutMessage(response.message);
+    }
   };
 
   return (
@@ -39,6 +74,12 @@ const CartPage = ({  }) => {
         <h2 className="text-5xl font-bold text-gray-900 mb-12 font-poppins">
           Shopping Cart
         </h2>
+
+        {(checkoutMessage || orderError) && (
+          <Alert className="mb-6" severity={cart.length === 0 ? "success" : "error"}>
+            {checkoutMessage || orderError}
+          </Alert>
+        )}
 
         {cart.length === 0 ? (
           <div className="text-center py-24 bg-white rounded-3xl shadow-lg">
@@ -114,16 +155,37 @@ const CartPage = ({  }) => {
                       </span>
                     </div>
                   </div>
+
+                  <TextField
+                    label="Shipping address"
+                    value={shippingAddress}
+                    onChange={(event) => setShippingAddress(event.target.value)}
+                    multiline
+                    minRows={2}
+                    required
+                    fullWidth
+                  />
+                  <TextField
+                    label="Payment method"
+                    value={paymentMethod}
+                    onChange={(event) => setPaymentMethod(event.target.value)}
+                    select
+                    fullWidth
+                  >
+                    <MenuItem value="CASH_ON_DELIVERY">Cash on delivery</MenuItem>
+                    <MenuItem value="ONLINE">Online payment</MenuItem>
+                  </TextField>
                 </div>
 
                 <Button
-                  onClick={onCheckout}
+                  onClick={handleCheckout}
+                  disabled={placingOrder}
                   size="small"
                   variant="contained"
                   className={`${sizes.md} w-full mt-4 gap-1 flex items-center justify-center font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 font-poppins border-r-4`}
                 >
                   <CheckCircle size={20} />
-                  Proceed to Checkout
+                  {placingOrder ? "Placing Order..." : "Place Order"}
                 </Button>
 
                 <div className="flex items-center justify-center gap-4 text-sm text-gray-500 font-inter">

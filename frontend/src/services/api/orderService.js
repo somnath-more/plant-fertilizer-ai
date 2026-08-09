@@ -1,8 +1,8 @@
 import apiClient from './apiClient';
 
-export const placeOrder = async (order) => {
+export const placeOrder = async (orderRequest) => {
   try {
-    const response = await apiClient.post('/orders', order);
+    const response = await apiClient.post('/orders', orderRequest);
     return {
       status: response.status,
       message: response.message || 'Order placed successfully',

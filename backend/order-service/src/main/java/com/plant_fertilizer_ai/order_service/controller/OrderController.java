@@ -22,8 +22,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Order>> createOrder(@RequestBody CreateOrderRequest request) {
-        Order order = orderService.createOrder(request);
+    public ResponseEntity<ApiResponse<Order>> placeOrder(@RequestBody CreateOrderRequest request) {
+        Order order = orderService.placeOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.success(Messages.ORDER_CREATED_SUCCESSFULLY, order, 201, order.getId())
         );

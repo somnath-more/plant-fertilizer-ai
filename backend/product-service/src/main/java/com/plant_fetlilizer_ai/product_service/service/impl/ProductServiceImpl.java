@@ -77,8 +77,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDto addProduct(ProductRequest productRequest, MultipartFile[] files) {
         try {
-
-
             // Create product entity
             Product product = new Product();
             product.setName(productRequest.getName());
@@ -91,15 +89,23 @@ public class ProductServiceImpl implements ProductService {
             product.setOrganic(productRequest.getOrganic());
             product.setFeatured(productRequest.getFeatured());
 
-            // Save files and collect URLs
+            // Save product first to get ID
+            Product savedProduct = productRepository.save(product);
+            Long productId = savedProduct.getId();
+            log.info("Product created with ID: {}", productId);
+
+            // Save files and collect URLs in product-specific folder
             List<String> imageUrls = new ArrayList<>();
             log.info("Received {} files for upload", files != null ? files.length : 0);
+            
             if (files != null && files.length > 0) {
-                Path uploadPath = Paths.get(uploadDir);
-                log.info("Upload directory: {}", uploadPath.toAbsolutePath());
-                if (!Files.exists(uploadPath)) {
-                    log.info("Upload directory does not exist, creating...");
-                    Files.createDirectories(uploadPath);
+                // Create product-specific folder: uploads/products/{productId}
+                Path productUploadDir = Paths.get(uploadDir, String.valueOf(productId));
+                log.info("Product upload directory: {}", productUploadDir.toAbsolutePath());
+                
+                if (!Files.exists(productUploadDir)) {
+                    log.info("Creating product upload directory...");
+                    Files.createDirectories(productUploadDir);
                 }
 
                 for (int i = 0; i < files.length; i++) {
@@ -121,10 +127,11 @@ public class ProductServiceImpl implements ProductService {
                         extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
                     }
                     String uniqueFilename = UUID.randomUUID().toString() + "_" + i + extension;
-                    Path filePath = uploadPath.resolve(uniqueFilename);
+                    Path filePath = productUploadDir.resolve(uniqueFilename);
                     Files.write(filePath, file.getBytes());
                     log.info("Saved file {}", filePath.toString());
-                    imageUrls.add("/uploads/products/" + uniqueFilename);
+                    // URL now includes productId folder
+                    imageUrls.add("/uploads/products/" + productId + "/" + uniqueFilename);
                 }
             }
 
@@ -134,12 +141,11 @@ public class ProductServiceImpl implements ProductService {
             }
 
             if (!imageUrls.isEmpty()) {
-                product.setImageUrl(String.join(",", imageUrls));
+                savedProduct.setImageUrl(String.join(",", imageUrls));
+                savedProduct = productRepository.save(savedProduct);
             }
 
-            Product savedProduct = productRepository.save(product);
-            log.info("Product saved with ID: {}", savedProduct.getId());
-
+            log.info("Product saved successfully with ID: {}", savedProduct.getId());
             return productMapper.toDto(savedProduct);
         } catch (CustomException ce) {
             log.info("Custom exception occurred: {}", ce.getMessage());
@@ -163,4 +169,4 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(updatedProduct);
     }
 
-                                                                                                                        }
+                                                                                                                          }

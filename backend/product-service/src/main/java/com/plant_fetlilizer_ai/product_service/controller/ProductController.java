@@ -9,6 +9,7 @@ import com.plant_fetlilizer_ai.product_service.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +48,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(Messages.PRODUCTS_BY_CATEGORY_RETRIEVED, products, 200, category));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProductResponseDto>> addProduct(
             @RequestParam("productRequest") String productRequestJson,
             @RequestParam(value = "files", required = false) MultipartFile[] files

@@ -7,7 +7,18 @@ import apiClient from './apiClient';
  */
 export const ADD_BLOG = async (blog) => {
   try {
-    const response = await apiClient.post('/blogs', blog);
+    const blogRequest = {
+      title: blog.title?.trim(),
+      excerpt: blog.excerpt?.trim() || '',
+      content: blog.content,
+      category: blog.category?.trim() || 'General',
+      author: blog.author?.trim() || 'Garden Team',
+      imageUrl: blog.imageUrl?.trim() || null,
+      readTime: blog.readTime || '1 min read',
+      published: blog.published ?? true,
+    };
+
+    const response = await apiClient.post('/blogs', blogRequest);
     return {
       status: response.status,
       message: response.message || 'Blog published successfully',
@@ -23,12 +34,15 @@ export const ADD_BLOG = async (blog) => {
 };
 
 /**
- * Fetch all blogs
+ * Fetch latest published blogs, optionally filtered by category
+ * @param {string} [category] - Optional category filter
  * @returns {Promise<{status: boolean, message: string, data: any}>}
  */
-export const getAllBlogs = async () => {
+export const getAllBlogs = async (category) => {
   try {
-    const response = await apiClient.get('/blogs');
+    const response = await apiClient.get('/blogs', {
+      params: category && category !== 'All' ? { category } : undefined,
+    });
     return {
       status: response.status,
       message: response.message || 'Blogs fetched successfully',
@@ -38,6 +52,42 @@ export const getAllBlogs = async () => {
     return {
       status: false,
       message: error.message || 'Failed to fetch blogs',
+      data: null,
+    };
+  }
+};
+
+export const getStaffPicks = async (sort = 'views', limit = 3) => {
+  try {
+    const response = await apiClient.get('/blogs/staff-picks', {
+      params: { sort, limit },
+    });
+    return {
+      status: response.status,
+      message: response.message,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message || 'Failed to fetch ranked blogs',
+      data: null,
+    };
+  }
+};
+
+export const likeBlog = async (blogId) => {
+  try {
+    const response = await apiClient.post(`/blogs/${blogId}/like`);
+    return {
+      status: response.status,
+      message: response.message || 'Blog liked successfully',
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message || 'Failed to like blog',
       data: null,
     };
   }
@@ -64,4 +114,3 @@ export const deleteBlog = async (blogId) => {
     };
   }
 };
-
