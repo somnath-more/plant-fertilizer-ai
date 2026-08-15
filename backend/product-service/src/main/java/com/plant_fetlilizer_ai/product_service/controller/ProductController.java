@@ -1,10 +1,12 @@
 package com.plant_fetlilizer_ai.product_service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.plant_fetlilizer_ai.product_service.constants.Messages;
 import com.plant_fetlilizer_ai.product_service.dto.ProductRequest;
 import com.plant_fetlilizer_ai.product_service.dto.ProductResponseDto;
 import com.plant_fetlilizer_ai.product_service.exception.ApiResponse;
+import com.plant_fetlilizer_ai.product_service.exception.CustomException;
 import com.plant_fetlilizer_ai.product_service.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,19 +55,19 @@ public class ProductController {
             @RequestParam("productRequest") String productRequestJson,
             @RequestParam(value = "files", required = false) MultipartFile[] files
     ) {
+        final ProductRequest productRequest;
         try {
-            ProductRequest productRequest = objectMapper.readValue(productRequestJson, ProductRequest.class);
-            ProductResponseDto saved = productService.addProduct(productRequest, files);
-            log.info("Product request: {}", productRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    ApiResponse.success(Messages.PRODUCT_CREATED_SUCCESSFULLY, saved, 201, saved.getId())
-            );
-        } catch (Exception e) {
-            log.error("Failed to add product", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    ApiResponse.error(Messages.INTERNAL_SERVER_ERROR, 500)
-            );
+            productRequest = objectMapper.readValue(productRequestJson, ProductRequest.class);
+        } catch (JsonProcessingException e) {
+            throw new CustomException("Invalid productRequest JSON: " + e.getOriginalMessage(),
+                    HttpStatus.BAD_REQUEST);
         }
+
+        ProductResponseDto saved = productService.addProduct(productRequest, files);
+        log.info("Product request: {}", productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.success(Messages.PRODUCT_CREATED_SUCCESSFULLY, saved, 201, saved.getId())
+        );
     }
 
     @PutMapping("/{id}/stock")

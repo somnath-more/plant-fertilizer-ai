@@ -30,6 +30,10 @@ spring:
           uri: lb://product-service
           predicates:
             - Path=/api/v1/products/**, /v1/graphql
+        - id: image-storage-service
+          uri: lb://image-storage-service
+          predicates:
+            - Path=/api/images/**
         # ============================
         # ORDER SERVICE
         # ============================
