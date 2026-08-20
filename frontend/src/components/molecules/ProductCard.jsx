@@ -28,7 +28,7 @@ import { Button } from "../atoms/Button";
 import { fontFamily } from "../../theme/customStyles";
 import { baseStyles, sizes, variants } from "../../theme/themeStyles";
 
-export const ProductCard = ({ product, onAddToCart }) => (
+export const ProductCard = ({ product, onAddToCart, onViewDetails }) => (
   <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 transform hover:-translate-y-2">
     <div className="relative h-52 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-emerald-400/10 group-hover:scale-110 transition-transform duration-700"></div>
@@ -47,9 +47,16 @@ export const ProductCard = ({ product, onAddToCart }) => (
     </div>
     <div className="p-6">
       <div className="flex justify-between items-start mb-3">
-        <h3 className="font-poppins font-bold text-xl text-gray-900 group-hover:text-green-600 transition-colors">
-          {product.name}
-        </h3>
+        <div>
+          <button
+            type="button"
+            onClick={() => onViewDetails?.(product.id)}
+            className="text-left font-poppins font-bold text-xl text-gray-900 group-hover:text-green-600 transition-colors"
+          >
+            {product.name}
+          </button>
+    
+        </div>
         <Badge variant={product.stock > 0 ? "success" : "danger"}>
           {product.stock > 0 ? "In Stock" : "Out of Stock"}
         </Badge>

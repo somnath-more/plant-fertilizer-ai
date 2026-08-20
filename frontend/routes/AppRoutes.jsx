@@ -14,6 +14,7 @@ import SignupPage from "../src/pages/SignupPage";
 import ForgotPassword from "../src/pages/ForgotPassword";
 import VerifyOtp from "../src/pages/VerifyOtp/VerifyOtp";
 import NotFound from "../src/pages/NotFound";
+import ProductDetailsPage from "../src/pages/ProductDetailsPage";
 
 export default function AppRoutes() {
   return (
@@ -29,6 +30,7 @@ export default function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/products/:productId" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/chatbot" element={<ChatbotPage />} />

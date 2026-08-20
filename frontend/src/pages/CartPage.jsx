@@ -6,6 +6,7 @@ import { CartItem } from "../components/molecules/CardItem";
 import { useCartStore } from "../store/useCartStore";
 import { sizes } from "../theme/themeStyles";
 import { useUserStore } from "../store/useUserStore";
+import { verifyPayment } from "../services/api/orderService";
 
 const CartPage = () => {
   const cart = useCartStore((state) => state.cart);
@@ -15,6 +16,7 @@ const CartPage = () => {
   const submitOrder = useCartStore((state) => state.placeOrder);
   const placingOrder = useCartStore((state) => state.placingOrder);
   const orderError = useCartStore((state) => state.orderError);
+  const clearCart = useCartStore((state) => state.clearCart);
   const user = useUserStore((state) => state.user);
   const [shippingAddress, setShippingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("CASH_ON_DELIVERY");
@@ -61,7 +63,39 @@ const CartPage = () => {
       billingAddress: shippingAddress,
       paymentMethod,
     });
-    if (response.status) {
+    if (response.status && paymentMethod === "ONLINE") {
+      if (!window.Razorpay) {
+        setCheckoutMessage("Razorpay checkout could not be loaded. Please refresh and try again.");
+        return;
+      }
+      const order = response.data;
+      const checkout = new window.Razorpay({
+        key: order.razorpayKeyId,
+        amount: Math.round(Number(order.total) * 100),
+        currency: "INR",
+        name: "Plant Fertilizer AI",
+        description: `Order ${order.orderNumber}`,
+        order_id: order.razorpayOrderId,
+        handler: async (payment) => {
+          const verification = await verifyPayment(payment);
+          if (verification.status) {
+            clearCart();
+            setCheckoutMessage(`Payment successful. Order ${order.orderNumber} is confirmed.`);
+          } else {
+            setCheckoutMessage(verification.message);
+          }
+        },
+        modal: {
+          ondismiss: () => setCheckoutMessage("Payment was cancelled. Your cart has been kept."),
+        },
+        theme: { color: "#16a34a" },
+      });
+      checkout.on("payment.failed", (failure) => {
+        setCheckoutMessage(failure.error?.description || "Payment failed. Please try again.");
+      });
+      checkout.open();
+    } else if (response.status) {
+      clearCart();
       setCheckoutMessage(`Order ${response.data.orderNumber} placed successfully.`);
     } else {
       setCheckoutMessage(response.message);

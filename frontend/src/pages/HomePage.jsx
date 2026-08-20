@@ -145,6 +145,7 @@ const HomePage = () => {
                 onAddToCart={() => {
                   addToCart(product);
                 }}
+                onViewDetails={(productId) => navigate(`/products/${productId}`)}
               />
             ))
           )}

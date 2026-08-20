@@ -96,3 +96,25 @@ export const deleteProduct = async (productId) => {
     };
   }
 };
+
+/**
+ * Fetch a single product by ID
+ * @param {string|number} productId - Product ID
+ * @returns {Promise<{status: boolean, message: string, data: any}>}
+ */
+export const getProductById = async (productId) => {
+  try {
+    const response = await apiClient.get(`/products/${productId}`);
+    return {
+      status: response.status,
+      message: response.message || 'Product fetched successfully',
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message || 'Failed to fetch product',
+      data: null,
+    };
+  }
+};

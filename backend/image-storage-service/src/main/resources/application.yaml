@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: image-storage-service
+server:
+  port: 8087
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+cloudflare:
+  r2:
+    account-id: eb632d2921fba6f72230ffa0ec73c569
+    access-key: ffbeef4fa7a144c9cc0b2265a60d9faf
+    secret-key: 729a188b0516ff54900d355152123d40eb42658f5150e689b46171ed9ae9bd5e
+    bucket-name: plantfertilizer83
+    public-url: https://pub-aefaa93224f8445c83a50ae4fb5a8639.r2.dev # or .r2.dev URL

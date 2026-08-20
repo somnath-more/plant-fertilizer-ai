@@ -1,7 +1,7 @@
 package com.plant_fetlilizer_ai.product_service.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.plant_fetlilizer_ai.product_service.client.ImageStorageClient;
 import com.plant_fetlilizer_ai.product_service.config.ProductMapper;
 import com.plant_fetlilizer_ai.product_service.constants.Messages;
 import com.plant_fetlilizer_ai.product_service.dto.ProductRequest;
@@ -11,19 +11,15 @@ import com.plant_fetlilizer_ai.product_service.model.Product;
 import com.plant_fetlilizer_ai.product_service.repository.ProductRepository;
 import com.plant_fetlilizer_ai.product_service.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,19 +29,20 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ObjectMapper objectMapper;
+    private final ImageStorageClient imageStorageClient;
 
-    @Value("${product.upload.dir:uploads/products}")
-    private String uploadDir;
-
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, ObjectMapper objectMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper,
+                              ObjectMapper objectMapper, ImageStorageClient imageStorageClient) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.objectMapper = objectMapper;
+        this.imageStorageClient = imageStorageClient;
     }
 
     @Override
     public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        List<Product> products = productRepository.findAll(sort);
         return products.stream().map(productMapper::toDto).collect(Collectors.toList());
     }
 
@@ -75,9 +72,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponseDto addProduct(ProductRequest productRequest, MultipartFile[] files) {
         try {
-            // Create product entity
             Product product = new Product();
             product.setName(productRequest.getName());
             product.setDescription(productRequest.getDescription());
@@ -94,20 +91,11 @@ public class ProductServiceImpl implements ProductService {
             Long productId = savedProduct.getId();
             log.info("Product created with ID: {}", productId);
 
-            // Save files and collect URLs in product-specific folder
+            // Upload every product image through image-storage-service and store its public URL.
             List<String> imageUrls = new ArrayList<>();
             log.info("Received {} files for upload", files != null ? files.length : 0);
             
             if (files != null && files.length > 0) {
-                // Create product-specific folder: uploads/products/{productId}
-                Path productUploadDir = Paths.get(uploadDir, String.valueOf(productId));
-                log.info("Product upload directory: {}", productUploadDir.toAbsolutePath());
-                
-                if (!Files.exists(productUploadDir)) {
-                    log.info("Creating product upload directory...");
-                    Files.createDirectories(productUploadDir);
-                }
-
                 for (int i = 0; i < files.length; i++) {
                     MultipartFile file = files[i];
                     if (file == null || file.isEmpty()) continue;
@@ -121,17 +109,18 @@ public class ProductServiceImpl implements ProductService {
                         throw new CustomException("File " + i + " exceeds 5MB limit", HttpStatus.BAD_REQUEST);
                     }
 
-                    String originalFilename = file.getOriginalFilename();
-                    String extension = "";
-                    if (originalFilename != null && originalFilename.contains(".")) {
-                        extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+                    Map<String, String> uploadResponse = imageStorageClient.uploadImage(file);
+                    if (uploadResponse == null) {
+                        throw new CustomException("Image storage service returned an empty response",
+                                HttpStatus.BAD_GATEWAY);
                     }
-                    String uniqueFilename = UUID.randomUUID().toString() + "_" + i + extension;
-                    Path filePath = productUploadDir.resolve(uniqueFilename);
-                    Files.write(filePath, file.getBytes());
-                    log.info("Saved file {}", filePath.toString());
-                    // URL now includes productId folder
-                    imageUrls.add("/uploads/products/" + productId + "/" + uniqueFilename);
+                    String imageUrl = uploadResponse.get("url");
+                    if (imageUrl == null || imageUrl.isBlank()) {
+                        throw new CustomException("Image storage service did not return an image URL",
+                                HttpStatus.BAD_GATEWAY);
+                    }
+                    imageUrls.add(imageUrl);
+                    log.info("Uploaded product image {} to image storage service", i);
                 }
             }
 
@@ -150,9 +139,6 @@ public class ProductServiceImpl implements ProductService {
         } catch (CustomException ce) {
             log.info("Custom exception occurred: {}", ce.getMessage());
             throw ce;
-        } catch (IOException e) {
-            log.error("Error parsing imageMetaJson or saving file", e);
-            throw new CustomException("Failed to save image or parse metadata: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             log.error("Error adding product", e);
             throw new CustomException("Failed to add product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -167,6 +153,21 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(stock);
         Product updatedProduct = productRepository.save(product);
         return productMapper.toDto(updatedProduct);
+    }
+
+    @Override
+    @Transactional
+    public ProductResponseDto decrementStock(Long id, Integer quantity) {
+        if (quantity == null || quantity <= 0) {
+            throw new CustomException("Quantity must be greater than zero", HttpStatus.BAD_REQUEST);
+        }
+        if (productRepository.decrementStock(id, quantity) == 0) {
+            if (!productRepository.existsById(id)) {
+                throw new CustomException(Messages.PRODUCT_NOT_FOUND + " with id: " + id, HttpStatus.NOT_FOUND);
+            }
+            throw new CustomException("Insufficient stock for product " + id, HttpStatus.CONFLICT);
+        }
+        return productMapper.toDto(productRepository.findById(id).orElseThrow());
     }
 
                                                                                                                           }

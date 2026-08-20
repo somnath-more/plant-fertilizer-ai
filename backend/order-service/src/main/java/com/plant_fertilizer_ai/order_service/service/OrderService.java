@@ -2,6 +2,7 @@ package com.plant_fertilizer_ai.order_service.service;
 
 import com.plant_fertilizer_ai.order_service.dto.CreateOrderRequest;
 import com.plant_fertilizer_ai.order_service.model.Order;
+import com.plant_fertilizer_ai.order_service.dto.VerifyPaymentRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 @Service
 public interface OrderService {
     Order placeOrder(CreateOrderRequest request);
+    Order verifyPayment(VerifyPaymentRequest request);
+
     List<Order> getUserOrders(Long userId);
     Order getOrderById(Long orderId);
     Order getOrderByNumber(String orderNumber);

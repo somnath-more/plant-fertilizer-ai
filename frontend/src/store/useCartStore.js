@@ -57,7 +57,7 @@ export const useCartStore = create((set, get) => ({
     set({ placingOrder: true, orderError: "" });
     const response = await submitOrder(orderRequest);
     if (response.status) {
-      set({ cart: [], placingOrder: false, orderError: "" });
+      set({ placingOrder: false, orderError: "" });
     } else {
       set({ placingOrder: false, orderError: response.message });
     }
