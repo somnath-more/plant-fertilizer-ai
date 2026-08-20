@@ -155,4 +155,19 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(updatedProduct);
     }
 
+    @Override
+    @Transactional
+    public ProductResponseDto decrementStock(Long id, Integer quantity) {
+        if (quantity == null || quantity <= 0) {
+            throw new CustomException("Quantity must be greater than zero", HttpStatus.BAD_REQUEST);
+        }
+        if (productRepository.decrementStock(id, quantity) == 0) {
+            if (!productRepository.existsById(id)) {
+                throw new CustomException(Messages.PRODUCT_NOT_FOUND + " with id: " + id, HttpStatus.NOT_FOUND);
+            }
+            throw new CustomException("Insufficient stock for product " + id, HttpStatus.CONFLICT);
+        }
+        return productMapper.toDto(productRepository.findById(id).orElseThrow());
+    }
+
                                                                                                                           }

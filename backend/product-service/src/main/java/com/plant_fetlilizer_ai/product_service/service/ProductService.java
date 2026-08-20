@@ -14,4 +14,5 @@ public interface ProductService {
     List<ProductResponseDto> getProductsByCategory(String category);
     ProductResponseDto addProduct(ProductRequest requestDto, MultipartFile[] files);
     ProductResponseDto updateStock(Long id, Integer stock);
+    ProductResponseDto decrementStock(Long id, Integer quantity);
 }

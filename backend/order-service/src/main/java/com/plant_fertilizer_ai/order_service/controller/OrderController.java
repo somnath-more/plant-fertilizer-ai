@@ -3,6 +3,7 @@ package com.plant_fertilizer_ai.order_service.controller;
 import com.plant_fertilizer_ai.order_service.constants.Messages;
 import com.plant_fertilizer_ai.order_service.dto.CreateOrderRequest;
 import com.plant_fertilizer_ai.order_service.dto.PaymentStatusUpdate;
+import com.plant_fertilizer_ai.order_service.dto.VerifyPaymentRequest;
 import com.plant_fertilizer_ai.order_service.exception.ApiResponse;
 import com.plant_fertilizer_ai.order_service.model.Order;
 import com.plant_fertilizer_ai.order_service.service.OrderService;
@@ -27,6 +28,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.success(Messages.ORDER_CREATED_SUCCESSFULLY, order, 201, order.getId())
         );
+    }
+    @PostMapping("/verify")
+    public ResponseEntity<ApiResponse<Order>> verifyPayment(@RequestBody VerifyPaymentRequest request) {
+        Order order = orderService.verifyPayment(request);
+        return ResponseEntity.ok(ApiResponse.success("Payment verified and order confirmed", order, 200,
+                order.getOrderNumber()));
     }
 
     @GetMapping("/user/{userId}")

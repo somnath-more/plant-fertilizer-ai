@@ -75,4 +75,11 @@ public class ProductController {
         ProductResponseDto product = productService.updateStock(id, stock);
         return ResponseEntity.ok(ApiResponse.success(Messages.STOCK_UPDATED_SUCCESSFULLY, product, 200, id));
     }
+
+    @PutMapping("/{id}/stock/decrement")
+    public ResponseEntity<ApiResponse<ProductResponseDto>> decrementStock(@PathVariable Long id,
+                                                                          @RequestParam Integer quantity) {
+        ProductResponseDto product = productService.decrementStock(id, quantity);
+        return ResponseEntity.ok(ApiResponse.success("Stock reduced successfully", product, 200, id));
+    }
 }

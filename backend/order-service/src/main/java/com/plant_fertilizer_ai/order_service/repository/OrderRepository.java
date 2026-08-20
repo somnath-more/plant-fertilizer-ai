@@ -2,6 +2,8 @@ package com.plant_fertilizer_ai.order_service.repository;
 
 import com.plant_fertilizer_ai.order_service.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import jakarta.persistence.LockModeType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +17,8 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 //    @Query("SELECT o FROM Order o WHERE o.orderNumber = :orderNumber")
 //   Order getOrderByOrderNumber(@Param("orderNumber") String orderNumber);
     Optional<Order> findByOrderNumber(String orderNumber);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Order> findByRazorpayOrderId(String razorpayOrderId);
 
 }

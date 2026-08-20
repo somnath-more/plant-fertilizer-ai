@@ -11,8 +11,8 @@
 	<groupId>com.plant-fetlilizer-ai</groupId>
 	<artifactId>order-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>product-service</name>
-	<description>Product Service for Plant Fertilizer AI Platform</description>
+	<name>order-service</name>
+	<description>Order Service for Plant Fertilizer AI Platform</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -68,6 +68,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.razorpay</groupId>
+			<artifactId>razorpay-java</artifactId>
+			<version>1.4.3</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

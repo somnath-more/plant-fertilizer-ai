@@ -16,3 +16,12 @@ export const placeOrder = async (orderRequest) => {
     };
   }
 };
+
+export const verifyPayment = async (paymentResponse) => {
+  try {
+    const response = await apiClient.post('/orders/verify', paymentResponse);
+    return { status: response.status, message: response.message, data: response.data };
+  } catch (error) {
+    return { status: false, message: error.message || 'Payment verification failed', data: null };
+  }
+};

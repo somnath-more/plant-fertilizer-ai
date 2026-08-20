@@ -55,6 +55,12 @@ public class Order {
     private String paymentStatus = "PENDING";
     
     private String paymentTransactionId;
+
+    @Column(unique = true)
+    private String razorpayOrderId;
+
+    @Transient
+    private String razorpayKeyId;
     
     private LocalDateTime orderDate = LocalDateTime.now();
     
