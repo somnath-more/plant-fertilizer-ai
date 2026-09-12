@@ -4,10 +4,12 @@ import com.plant_fertilizer_ai.auth_service.constants.Messages;
 import com.plant_fertilizer_ai.auth_service.dto.LoginRequest;
 import com.plant_fertilizer_ai.auth_service.dto.LoginResponse;
 import com.plant_fertilizer_ai.auth_service.dto.RegisterRequest;
+import com.plant_fertilizer_ai.auth_service.dto.OAuthExchangeRequest;
 import com.plant_fertilizer_ai.auth_service.exception.ApiResponse;
 import com.plant_fertilizer_ai.auth_service.security.JwtUtil;
 import com.plant_fertilizer_ai.auth_service.service.AuthService;
 import com.plant_fertilizer_ai.auth_service.service.UserService;
+import com.plant_fertilizer_ai.auth_service.service.OAuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -28,10 +30,12 @@ public class AuthController {
     private String instagramChannel;
     private final UserService userService;
     private final AuthService authService;
+    private final OAuthService oAuthService;
 
-    public AuthController(UserService userService, AuthService authService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AuthController(UserService userService, AuthService authService, OAuthService oAuthService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authService = authService;
+        this.oAuthService = oAuthService;
     }
 
     Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -56,6 +60,13 @@ public class AuthController {
         logger.info("Logging in user with email: {}", loginRequest.getEmail());
         LoginResponse loginResponse = authService.authenticate(loginRequest);
         return ResponseEntity.ok(ApiResponse.success(Messages.LOGIN_SUCCESS, loginResponse, 200, loginRequest.getEmail()));
+    }
+
+    @PostMapping("/oauth/exchange")
+    public ResponseEntity<ApiResponse<LoginResponse>> exchangeOAuthIdentity(
+            @Valid @RequestBody OAuthExchangeRequest request) {
+        LoginResponse response = oAuthService.exchange(request.idToken());
+        return ResponseEntity.ok(ApiResponse.success("Google sign-in successful", response, 200, response.getEmail()));
     }
 
     @GetMapping("/health")

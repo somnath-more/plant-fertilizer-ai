@@ -1,13 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Leaf, LogIn, LogOut, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { ORGANICFERT, PAGES } from "../../utils";
 import { Button } from "../atoms/Button";
 import FertilizerLogo from "../../assets/images/PlantFertilizerAI.svg";
 import Icon from "../atoms/Icon";
-import { fontFamily } from "../../theme/customStyles";
-import { baseStyles, sizes, variants } from "../../theme/themeStyles";
 import { useState } from "react";
 import ProfileCard from "../molecules/ProfileCard/ProfileCard";
+import Profile from "./Profile/Profile";
 import { Popover } from "@mui/material";
 import { useUserStore } from '../../store/useUserStore';
 // import { Popover } from "@mui/material";
@@ -15,8 +14,8 @@ import { useUserStore } from '../../store/useUserStore';
 const Header = ({  onNavigate, cartCount, currentPage }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
-  const { logout } = useUserStore((state) => state);
-  const { user } = useUserStore((state) => state);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const { user, login, logout } = useUserStore((state) => state);
 
   const handleOpenUserProfileCard = (event) => {
     setAnchorEl(event.currentTarget);
@@ -27,6 +26,17 @@ const Header = ({  onNavigate, cartCount, currentPage }) => {
   };
 
   const open = Boolean(anchorEl);
+  const handleOpenProfile = () => {
+    handleClose();
+    setProfileOpen(true);
+  };
+
+  const handleProfileSaved = (profile) => {
+    const updatedUser = { ...user, ...profile };
+    login(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
 const handleSignOut = () => {
   // remove storage user and token
   localStorage.removeItem("user");
@@ -132,11 +142,20 @@ const handleSignOut = () => {
             >
               <ProfileCard
                 name={user?.name || "John Doe"}
+                address={user?.address}
+                phone={user?.phone}
                 imageUrl={user?.imageUrl || "https://randomuser.me/api/portraits/lego/2.jpg"}
+                onProfileClick={handleOpenProfile}
                 onAppearanceClick={() => console.log("update appearance")}
                 onSignOutClick={handleSignOut}
               />
             </Popover>
+            {profileOpen && (
+              <Profile
+                onClose={() => setProfileOpen(false)}
+                onSaved={handleProfileSaved}
+              />
+            )}
           </div>
         </div>
       </div>

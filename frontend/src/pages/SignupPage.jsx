@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import SignUp from "../components/organisms/SignUp/SignUp";
 import useAlert from "../hooks/useAlert";
-import { registerUser } from "../services/api/authService";
+import { exchangeOAuthToken, registerUser } from "../services/api/authService";
+import { useUserStore } from "../store/useUserStore";
 
 const initialValues = {
   name: "",
@@ -14,7 +14,7 @@ const initialValues = {
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const { loginWithRedirect } = useAuth0();
+  const { login } = useUserStore();
   const { success, error } = useAlert();
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState(initialValues);
@@ -62,12 +62,23 @@ const SignupPage = () => {
     }
   };
 
-  const handleSocialAuth = (connection) => {
-    loginWithRedirect({
-      authorizationParams: {
-        connection,
-      },
-    });
+  const handleGoogleAuth = async (idToken) => {
+    setLoading(true);
+    try {
+      const result = await exchangeOAuthToken(idToken);
+      if (!result.status) {
+        error(result.message);
+        return;
+      }
+      const userObj = { ...result.data };
+      localStorage.setItem("token", result.data.token);
+      localStorage.setItem("user", JSON.stringify(userObj));
+      login(userObj);
+      success(result.message);
+      navigate("/home", { replace: true });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,7 +89,7 @@ const SignupPage = () => {
       onChange={handleChange}
       onSubmit={handleRegister}
       onLogin={() => navigate("/login")}
-      onSocialAuth={handleSocialAuth}
+      onSocialAuth={handleGoogleAuth}
     />
   );
 };

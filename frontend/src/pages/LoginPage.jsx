@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import SignIn from "../components/organisms/SignIn/SignIn";
 import useAlert from "../hooks/useAlert";
-import { loginUser } from "../services/api/authService";
+import { exchangeOAuthToken, loginUser } from "../services/api/authService";
 import { useUserStore } from "../store/useUserStore";
 
 const initialValues = {
@@ -13,12 +12,32 @@ const initialValues = {
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { loginWithRedirect } = useAuth0();
   const { success, error } = useAlert();
   const { login } = useUserStore();
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState(initialValues);
   const [loading, setLoading] = useState(false);
+  const handleGoogleAuth = async (idToken) => {
+    setLoading(true);
+    try {
+      const result = await exchangeOAuthToken(idToken);
+      if (!result.status) {
+        error(result.message);
+        return;
+      }
+
+      const userObj = { ...result.data };
+      localStorage.setItem("token", result.data.token);
+      localStorage.setItem("user", JSON.stringify(userObj));
+      login(userObj);
+      success(result.message);
+      navigate("/home", { replace: true });
+    } catch (oauthError) {
+      error(oauthError.message || "Google sign-in failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (field, value) => {
     setValues((previous) => ({ ...previous, [field]: value }));
@@ -68,14 +87,6 @@ const LoginPage = () => {
     }
   };
 
-  const handleSocialAuth = (connection) => {
-    loginWithRedirect({
-      authorizationParams: {
-        connection,
-      },
-    });
-  };
-
   return (
     <SignIn
       values={values}
@@ -85,7 +96,7 @@ const LoginPage = () => {
       onSubmit={handleLogin}
       onForgotPassword={() => navigate("/forgot-password")}
       onSignUp={() => navigate("/register")}
-      onSocialAuth={handleSocialAuth}
+      onSocialAuth={handleGoogleAuth}
     />
   );
 };

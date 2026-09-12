@@ -43,3 +43,26 @@ export const loginUser = async (user) => {
     };
   }
 };
+
+export const exchangeOAuthToken = async (idToken) => {
+  try {
+    const response = await apiClient.post('/auth/oauth/exchange', { idToken });
+    return response;
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message || 'Google sign-in failed',
+      data: null,
+    };
+  }
+};
+
+const profileHeaders = () => ({
+  Authorization: `Bearer ${localStorage.getItem('token')}`,
+});
+
+export const getProfile = () =>
+  apiClient.get('/auth/profile', { headers: profileHeaders() });
+
+export const updateProfile = (profile) =>
+  apiClient.put('/auth/profile', profile, { headers: profileHeaders() });
