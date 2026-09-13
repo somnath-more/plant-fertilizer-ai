@@ -4,17 +4,23 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JwtUtil {
-    private static final String SECRET_KEY = "organicfert_secret_key_must_be_at_least_256_bits_long_for_hs256";
+    private final Key signingKey;
     private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 24 hours
+
+    public JwtUtil(@Value("${JWT_SECRET}") String jwtSecret) {
+        this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String generateToken(String username, Map<String, Object> claims) {
         return createToken(claims, username);
@@ -32,7 +38,7 @@ public class JwtUtil {
     }
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return signingKey;
     }
 
     public Boolean validateToken(String token, String username) {

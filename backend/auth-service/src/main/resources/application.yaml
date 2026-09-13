@@ -1,16 +1,4 @@
 instagram:
-    channel:
-       url: https://graph.instagram.com
-       access-token: EAAJZC9ZC8ZBUBADZCZC9ZC8ZBUBADZC
-
-#h2 database configuration
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
-  h2:
-    console:
-      enabled: true
-
+  channel:
+    url: ${INSTAGRAM_CHANNEL_URL:https://graph.instagram.com}
+    access-token: ${INSTAGRAM_ACCESS_TOKEN:}

@@ -1,0 +1,8 @@
+**/.env
+**/.env.*
+**/target
+**/.idea
+**/*.log
+**/hs_err_*
+**/replay_*
+**/src/test

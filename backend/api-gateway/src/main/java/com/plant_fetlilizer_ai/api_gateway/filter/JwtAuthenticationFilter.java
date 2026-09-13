@@ -3,6 +3,7 @@ package com.plant_fetlilizer_ai.api_gateway.filter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
-    private static final String SECRET_KEY = "organic_plant_fertilizer_must_be_at_least_256_bits_long_for_hs256";
+    private final Key signingKey;
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/v1/auth/login",
             "/api/v1/auth/register",
@@ -23,8 +25,9 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             "/v1/graphql"
     );
 
-    public JwtAuthenticationFilter() {
+    public JwtAuthenticationFilter(@Value("${JWT_SECRET}") String jwtSecret) {
         super(Config.class);
+        this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -57,9 +60,8 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             String token = authHeader.substring(7);
 
             try {
-                Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
                 Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(key)
+                        .setSigningKey(signingKey)
                         .build()
                         .parseClaimsJws(token)
                         .getBody();
