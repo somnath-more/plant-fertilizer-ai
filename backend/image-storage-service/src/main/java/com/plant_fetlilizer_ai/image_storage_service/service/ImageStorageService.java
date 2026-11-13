@@ -1,5 +1,7 @@
 package com.plant_fetlilizer_ai.image_storage_service.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,11 @@ public class ImageStorageService {
 
     @Value("${cloudflare.r2.public-url}")
     private String publicUrl;
+    Logger logger = LoggerFactory.getLogger(ImageStorageService.class);
 
     public String uploadImage(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+      logger.info("File name: " + fileName);
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)

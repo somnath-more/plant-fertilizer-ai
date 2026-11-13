@@ -110,6 +110,7 @@ public class ProductServiceImpl implements ProductService {
                     }
 
                     Map<String, String> uploadResponse = imageStorageClient.uploadImage(file);
+                    log.info("Image storage service response: {}", uploadResponse);
                     if (uploadResponse == null) {
                         throw new CustomException("Image storage service returned an empty response",
                                 HttpStatus.BAD_GATEWAY);
@@ -139,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (CustomException ce) {
             log.info("Custom exception occurred: {}", ce.getMessage());
             throw ce;
-        } catch (Exception e) {
+            } catch (Exception e) {
             log.error("Error adding product", e);
             throw new CustomException("Failed to add product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
