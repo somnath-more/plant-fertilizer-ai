@@ -22,6 +22,8 @@ jobs:
       environment: staging
     secrets: inherit
   production:
+    # Enable after production infrastructure and approval rules are configured.
+    if: false
     needs: staging
     uses: ./.github/workflows/deploy.yml
     with:
