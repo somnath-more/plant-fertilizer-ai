@@ -46,7 +46,8 @@ jobs:
     env:
       DB_PASSWORD: ci_password
       JWT_SECRET: ${{ github.sha }}
-      EUREKA_CLIENT_ENABLED: 'false'
+      # The Eureka server needs client infrastructure even without self-registration.
+      EUREKA_CLIENT_ENABLED: ${{ matrix.service == 'service-registry' && 'true' || 'false' }}
       CLOUDFLARE_R2_ACCOUNT_ID: ci
       CLOUDFLARE_R2_ACCESS_KEY: ci
       CLOUDFLARE_R2_SECRET_KEY: ci

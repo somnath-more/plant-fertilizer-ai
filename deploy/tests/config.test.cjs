@@ -18,6 +18,9 @@ for (const part of ['frontend', 'backend']) {
   assert(publish.if.includes("github.ref == 'refs/heads/main'"));
   assert(publish.steps.some(s => s.with?.tags?.includes('value=${{ github.sha }}')));
 }
+// Eureka server requires the client infrastructure that creates ApplicationInfoManager.
+assert.equal(docs['backend.yml'].jobs.backend.env.EUREKA_CLIENT_ENABLED,
+  "${{ matrix.service == 'service-registry' && 'true' || 'false' }}");
 const compose = YAML.parse(fs.readFileSync('deploy/compose.yml', 'utf8'), {merge: true});
 assert.equal(Object.keys(compose.services).length, 9);
 for (const service of Object.values(compose.services)) assert(service.healthcheck);
