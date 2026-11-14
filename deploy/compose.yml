@@ -1,0 +1,152 @@
+name: plant
+x-backend: &backend
+  restart: unless-stopped
+  environment: &common
+    EUREKA_URL: http://service-registry:8761/eureka/
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: 'true'
+    SPRING_DATA_REDIS_HOST: redis
+    SPRING_DATA_REDIS_PORT: '6379'
+    REDIS_HOST: redis
+    REDIS_PORT: '6379'
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  service-registry:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/service-registry:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8761']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+  api-gateway:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/api-gateway:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8080']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+    depends_on:
+      service-registry:
+        condition: service_healthy
+    environment:
+      <<: *common
+      JWT_SECRET: ${JWT_SECRET:?required}
+  auth-service:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/auth-service:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8081']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+    depends_on:
+      service-registry:
+        condition: service_healthy
+    environment:
+      <<: *common
+      DB_URL: ${AUTH_DB_URL:?required}
+      DB_USERNAME: ${AUTH_DB_USERNAME:?required}
+      DB_PASSWORD: ${AUTH_DB_PASSWORD:?required}
+      JWT_SECRET: ${JWT_SECRET:?required}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      INSTAGRAM_ACCESS_TOKEN: ${INSTAGRAM_ACCESS_TOKEN:-}
+  product-service:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/product-service:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8082']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+    depends_on:
+      service-registry:
+        condition: service_healthy
+    environment:
+      <<: *common
+      DB_URL: ${PRODUCT_DB_URL:?required}
+      DB_USERNAME: ${PRODUCT_DB_USERNAME:?required}
+      DB_PASSWORD: ${PRODUCT_DB_PASSWORD:?required}
+      IMAGE_STORAGE_URL: http://image-storage-service:8087
+  order-service:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/order-service:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8083']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+    depends_on:
+      service-registry:
+        condition: service_healthy
+    environment:
+      <<: *common
+      DB_URL: ${ORDER_DB_URL:?required}
+      DB_USERNAME: ${ORDER_DB_USERNAME:?required}
+      DB_PASSWORD: ${ORDER_DB_PASSWORD:?required}
+      PRODUCT_SERVICE_BASE_URL: http://product-service:8082
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+  blog-service:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/blog-service:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8086']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+    depends_on:
+      service-registry:
+        condition: service_healthy
+    environment:
+      <<: *common
+      DB_URL: ${BLOG_DB_URL:?required}
+      DB_USERNAME: ${BLOG_DB_USERNAME:?required}
+      DB_PASSWORD: ${BLOG_DB_PASSWORD:?required}
+  image-storage-service:
+    <<: *backend
+    image: ${IMAGE_PREFIX:?required}/image-storage-service:${IMAGE_TAG:?required}
+    healthcheck:
+      test: [CMD, bash, -c, 'echo > /dev/tcp/127.0.0.1/8087']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 24
+    depends_on:
+      service-registry:
+        condition: service_healthy
+    environment:
+      <<: *common
+      CLOUDFLARE_R2_ACCOUNT_ID: ${CLOUDFLARE_R2_ACCOUNT_ID:?required}
+      CLOUDFLARE_R2_ACCESS_KEY: ${CLOUDFLARE_R2_ACCESS_KEY:?required}
+      CLOUDFLARE_R2_SECRET_KEY: ${CLOUDFLARE_R2_SECRET_KEY:?required}
+      CLOUDFLARE_R2_BUCKET_NAME: ${CLOUDFLARE_R2_BUCKET_NAME:?required}
+      CLOUDFLARE_R2_PUBLIC_URL: ${CLOUDFLARE_R2_PUBLIC_URL:?required}
+  frontend:
+    image: ${IMAGE_PREFIX:?required}/frontend:${IMAGE_TAG:?required}
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8080:80'
+    environment:
+      API_GATEWAY_URL: http://api-gateway:8080
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1/]
+      interval: 10s
+      timeout: 5s
+      retries: 12

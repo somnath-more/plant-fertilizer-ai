@@ -1,3 +1,5 @@
 # Local environment files may contain credentials.
 .env
 .env.*
+
+!deploy/.env.example

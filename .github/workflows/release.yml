@@ -1,0 +1,29 @@
+name: Release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+jobs:
+  frontend:
+    uses: ./.github/workflows/frontend.yml
+    secrets: inherit
+  backend:
+    uses: ./.github/workflows/backend.yml
+    secrets: inherit
+  staging:
+    needs: [frontend, backend]
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging
+    secrets: inherit
+  production:
+    needs: staging
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production
+    secrets: inherit
